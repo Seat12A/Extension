@@ -105,3 +105,6 @@
   html, body { @apply bg-background text-foreground font-sans antialiased; }
   body { font-size: 15px; line-height: 20px; }
 }
+
+/* Tailwind scans from the Vite root (src/pages): also scan all UI sources. */
+@source "../";

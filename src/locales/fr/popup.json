@@ -1,1 +1,110 @@
-{}
+{
+  "popup_open_options": {
+    "message": "Ouvrir les options",
+    "description": "Libellé du bouton réglages (popup)"
+  },
+  "popup_status_active": {
+    "message": "Actif",
+    "description": "Titre du statut: envoi normal"
+  },
+  "popup_sent_today_one": {
+    "message": "$1 post remonté aujourd'hui",
+    "description": "Compteur du jour (singulier)"
+  },
+  "popup_sent_today_other": {
+    "message": "$1 posts remontés aujourd'hui",
+    "description": "Compteur du jour (pluriel)"
+  },
+  "popup_sent_with_queue": {
+    "message": "$1 · $2 en attente",
+    "description": "$1 = texte du compteur du jour, $2 = nombre de posts en file d'attente"
+  },
+  "popup_status_paused": {
+    "message": "Envoi en pause",
+    "description": "Titre du statut: envoi désactivé par l'utilisateur"
+  },
+  "popup_status_paused_desc": {
+    "message": "Les vérifications et les badges restent affichés.",
+    "description": "Description du statut en pause"
+  },
+  "popup_status_quota": {
+    "message": "Quota du jour atteint",
+    "description": "Titre du statut: quota atteint"
+  },
+  "popup_status_quota_desc": {
+    "message": "Reprise à $1",
+    "description": "$1 = heure locale de reprise"
+  },
+  "popup_status_quota_desc_unknown": {
+    "message": "Reprise demain.",
+    "description": "Quota atteint sans heure de reprise connue"
+  },
+  "popup_status_offline": {
+    "message": "Seat 12A injoignable",
+    "description": "Titre du statut: service injoignable"
+  },
+  "popup_status_offline_desc": {
+    "message": "Nouvel essai à $1",
+    "description": "$1 = heure locale du prochain essai"
+  },
+  "popup_status_offline_desc_unknown": {
+    "message": "Nouvel essai en cours.",
+    "description": "Hors ligne sans heure d'essai connue"
+  },
+  "popup_status_no_filters": {
+    "message": "Aucun filtre actif",
+    "description": "Titre du statut: pas de filtre"
+  },
+  "popup_status_no_filters_desc": {
+    "message": "Rien n'est envoyé tant que l'équipe n'a pas publié de filtres.",
+    "description": "Description du statut sans filtre"
+  },
+  "popup_status_error": {
+    "message": "Statut indisponible",
+    "description": "Titre quand l'extension ne répond pas"
+  },
+  "popup_status_error_desc": {
+    "message": "Impossible de lire l'état de l'extension.",
+    "description": "Description quand l'extension ne répond pas"
+  },
+  "popup_send_observations": {
+    "message": "Remonter les posts filtrés",
+    "description": "Réglage: envoi des observations"
+  },
+  "popup_send_observations_help": {
+    "message": "Envoie à l'équipe les posts publics qui correspondent à ses filtres.",
+    "description": "Aide du réglage d'envoi"
+  },
+  "popup_show_verdicts": {
+    "message": "Afficher les vérifications",
+    "description": "Réglage: afficher les verdicts"
+  },
+  "popup_show_verdicts_help": {
+    "message": "Affiche les vérifications validées sous les posts concernés.",
+    "description": "Aide du réglage des verdicts"
+  },
+  "popup_show_badges": {
+    "message": "Badges Seat 12A",
+    "description": "Réglage: badges"
+  },
+  "popup_show_badges_help": {
+    "message": "Remplace les coches de X.",
+    "description": "Aide du réglage des badges"
+  },
+  "popup_language": {
+    "message": "Langue",
+    "description": "Libellé du sélecteur de langue"
+  },
+  "popup_privacy": {
+    "message": "Confidentialité",
+    "description": "Lien vers la politique de confidentialité"
+  },
+  "popup_options": {
+    "message": "Options",
+    "description": "Lien vers la page d'options"
+  },
+  "popup_version": {
+    "message": "Version $1",
+    "description": "$1 = numéro de version de l'extension"
+  }
+}

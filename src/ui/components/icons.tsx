@@ -32,6 +32,15 @@ import Block from "@material-symbols/svg-400/rounded/block.svg?react";
 import DataObject from "@material-symbols/svg-400/rounded/data_object.svg?react";
 import Policy from "@material-symbols/svg-400/rounded/policy.svg?react";
 
+import VerifiedFill from "@material-symbols/svg-400/rounded/verified-fill.svg?react";
+import Tune from "@material-symbols/svg-400/rounded/tune.svg?react";
+import Lock from "@material-symbols/svg-400/rounded/lock.svg?react";
+import BadgeIcon from "@material-symbols/svg-400/rounded/badge.svg?react";
+import Flag from "@material-symbols/svg-400/rounded/flag.svg?react";
+import CheckCircle from "@material-symbols/svg-400/rounded/check_circle.svg?react";
+import Warning from "@material-symbols/svg-400/rounded/warning.svg?react";
+import ErrorIcon from "@material-symbols/svg-400/rounded/error.svg?react";
+
 type IconComponent = (props: SVGProps<SVGSVGElement>) => React.ReactElement;
 const wrap = (C: ComponentType<SVGProps<SVGSVGElement>>): IconComponent => {
   const Wrapped = ({ className, ...rest }: SVGProps<SVGSVGElement>) => (
@@ -68,5 +77,13 @@ export const Icons = {
   block: wrap(Block),
   code: wrap(DataObject),
   policy: wrap(Policy),
+  verifiedFill: wrap(VerifiedFill),
+  tune: wrap(Tune),
+  lock: wrap(Lock),
+  badge: wrap(BadgeIcon),
+  flag: wrap(Flag),
+  checkCircle: wrap(CheckCircle),
+  warning: wrap(Warning),
+  error: wrap(ErrorIcon),
 } as const;
 export type IconName = keyof typeof Icons;

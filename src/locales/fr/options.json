@@ -1,1 +1,398 @@
-{}
+{
+  "options_nav_label": {
+    "message": "Sections des options",
+    "description": "Étiquette accessible de la navigation par onglets"
+  },
+  "options_tab_general": {
+    "message": "Général",
+    "description": "Onglet Général"
+  },
+  "options_tab_privacy": {
+    "message": "Vie privée",
+    "description": "Onglet Vie privée"
+  },
+  "options_tab_request": {
+    "message": "Demander un badge",
+    "description": "Onglet de demande de badge"
+  },
+  "options_tab_report": {
+    "message": "Signaler un badge",
+    "description": "Onglet de signalement"
+  },
+  "options_tab_about": {
+    "message": "À propos",
+    "description": "Onglet À propos"
+  },
+  "options_general_title": {
+    "message": "Général",
+    "description": "Titre de section"
+  },
+  "options_general_desc": {
+    "message": "Les changements sont enregistrés immédiatement.",
+    "description": "Sous-titre de la section générale"
+  },
+  "options_language": {
+    "message": "Langue",
+    "description": "Libellé du sélecteur de langue"
+  },
+  "options_language_help": {
+    "message": "Langue de l'extension et des éléments affichés sur X.",
+    "description": "Aide du sélecteur de langue"
+  },
+  "options_theme": {
+    "message": "Thème",
+    "description": "Libellé du choix du thème"
+  },
+  "options_theme_system": {
+    "message": "Système",
+    "description": "Thème suivant le système"
+  },
+  "options_theme_light": {
+    "message": "Clair",
+    "description": "Thème clair"
+  },
+  "options_theme_dark": {
+    "message": "Sombre",
+    "description": "Thème sombre"
+  },
+  "options_features": {
+    "message": "Fonctionnalités",
+    "description": "Titre du groupe de commutateurs"
+  },
+  "options_send_observations": {
+    "message": "Remonter les posts filtrés",
+    "description": "Réglage d'envoi"
+  },
+  "options_send_observations_help": {
+    "message": "Envoie à l'équipe les posts publics qui correspondent à ses filtres. Les vérifications et les badges continuent de fonctionner si vous le désactivez.",
+    "description": "Aide du réglage d'envoi"
+  },
+  "options_show_verdicts": {
+    "message": "Afficher les vérifications",
+    "description": "Réglage des verdicts"
+  },
+  "options_show_verdicts_help": {
+    "message": "Affiche les vérifications validées sous les posts concernés.",
+    "description": "Aide du réglage des verdicts"
+  },
+  "options_show_badges": {
+    "message": "Badges Seat 12A",
+    "description": "Réglage des badges"
+  },
+  "options_show_badges_help": {
+    "message": "Remplace les coches de X par les badges Seat 12A.",
+    "description": "Aide du réglage des badges"
+  },
+  "options_privacy_title": {
+    "message": "Vie privée",
+    "description": "Titre de section"
+  },
+  "options_privacy_desc": {
+    "message": "Seat 12A ne collecte que ce qui est nécessaire à la vérification des faits, rien sur vous.",
+    "description": "Sous-titre vie privée"
+  },
+  "options_privacy_sent_title": {
+    "message": "Ce qui est envoyé",
+    "description": "Titre de liste"
+  },
+  "options_privacy_sent_1": {
+    "message": "Le contenu des posts publics qui correspondent aux filtres de l'équipe",
+    "description": "Élément envoyé"
+  },
+  "options_privacy_sent_2": {
+    "message": "L'identifiant du post",
+    "description": "Élément envoyé"
+  },
+  "options_privacy_sent_3": {
+    "message": "Le pseudo de son auteur",
+    "description": "Élément envoyé"
+  },
+  "options_privacy_sent_4": {
+    "message": "Les métriques visibles (vues, J'aime, reposts, réponses)",
+    "description": "Élément envoyé"
+  },
+  "options_privacy_sent_5": {
+    "message": "Un jeton d'installation aléatoire",
+    "description": "Élément envoyé"
+  },
+  "options_privacy_never_title": {
+    "message": "Ce qui n'est jamais envoyé",
+    "description": "Titre de liste"
+  },
+  "options_privacy_never_1": {
+    "message": "Votre compte et votre pseudo",
+    "description": "Élément jamais envoyé"
+  },
+  "options_privacy_never_2": {
+    "message": "Votre historique de navigation",
+    "description": "Élément jamais envoyé"
+  },
+  "options_privacy_never_3": {
+    "message": "Votre fil complet",
+    "description": "Élément jamais envoyé"
+  },
+  "options_privacy_never_4": {
+    "message": "Vos messages privés et vos notifications",
+    "description": "Élément jamais envoyé"
+  },
+  "options_privacy_never_5": {
+    "message": "Votre adresse IP n'est pas conservée côté serveur",
+    "description": "Élément jamais envoyé"
+  },
+  "options_privacy_lookups_title": {
+    "message": "Consultations",
+    "description": "Titre de paragraphe"
+  },
+  "options_privacy_lookups_badges": {
+    "message": "Pour afficher les badges, l'extension demande à Seat 12A les identifiants numériques des auteurs visibles à l'écran (requête publique et mise en cache).",
+    "description": "Explication des consultations de badges"
+  },
+  "options_privacy_lookups_verdicts": {
+    "message": "Pour les vérifications, seuls les posts filtrés sont concernés.",
+    "description": "Explication des consultations de verdicts"
+  },
+  "options_privacy_example_toggle": {
+    "message": "Voir un exemple de données envoyées",
+    "description": "Bouton qui déplie l'exemple"
+  },
+  "options_privacy_example_hide": {
+    "message": "Masquer l'exemple",
+    "description": "Bouton qui replie l'exemple"
+  },
+  "options_privacy_example_label": {
+    "message": "Exemple de données envoyées pour un post",
+    "description": "Étiquette accessible du bloc de code"
+  },
+  "options_privacy_example_text": {
+    "message": "Exemple de texte d'un post public qui correspond à un filtre.",
+    "description": "Texte fictif du post dans l'exemple JSON"
+  },
+  "options_token_title": {
+    "message": "Jeton d'installation",
+    "description": "Titre de section"
+  },
+  "options_token_desc": {
+    "message": "Le jeton est aléatoire et ne vous identifie pas. Le serveur n'en garde qu'un pseudonyme quotidien, détruit le lendemain.",
+    "description": "Explication du jeton"
+  },
+  "options_token_reset": {
+    "message": "Réinitialiser le jeton",
+    "description": "Bouton de réinitialisation"
+  },
+  "options_token_confirm_title": {
+    "message": "Réinitialiser le jeton ?",
+    "description": "Titre de la confirmation"
+  },
+  "options_token_confirm_desc": {
+    "message": "Un nouveau jeton aléatoire sera généré. Cette action est immédiate et sans conséquence sur vos réglages.",
+    "description": "Description de la confirmation"
+  },
+  "options_token_confirm": {
+    "message": "Réinitialiser",
+    "description": "Bouton de confirmation"
+  },
+  "options_token_cancel": {
+    "message": "Annuler",
+    "description": "Bouton d'annulation"
+  },
+  "options_token_success": {
+    "message": "Le jeton a été réinitialisé.",
+    "description": "Message de succès"
+  },
+  "options_request_title": {
+    "message": "Demander un badge",
+    "description": "Titre de section"
+  },
+  "options_request_desc": {
+    "message": "Chaque demande est examinée par l'équipe. Les mêmes règles s'appliquent à tous les comptes.",
+    "description": "Sous-titre du formulaire"
+  },
+  "options_request_kind": {
+    "message": "Type de demande",
+    "description": "Légende du choix du type"
+  },
+  "options_request_kind_badge": {
+    "message": "Badge pour un compte",
+    "description": "Option de type"
+  },
+  "options_request_kind_affiliation": {
+    "message": "Affiliation à une organisation",
+    "description": "Option de type"
+  },
+  "options_account_id": {
+    "message": "Identifiant numérique du compte",
+    "description": "Libellé du champ"
+  },
+  "options_account_id_help": {
+    "message": "L'identifiant numérique du compte sur X, et non le pseudo.",
+    "description": "Aide du champ"
+  },
+  "options_category": {
+    "message": "Catégorie",
+    "description": "Libellé du champ"
+  },
+  "options_org_id": {
+    "message": "Identifiant numérique de l'organisation",
+    "description": "Libellé du champ"
+  },
+  "options_org_title": {
+    "message": "Fonction dans l'organisation",
+    "description": "Libellé du champ"
+  },
+  "options_org_title_placeholder": {
+    "message": "Porte-parole",
+    "description": "Exemple de fonction"
+  },
+  "options_justification": {
+    "message": "Justification",
+    "description": "Libellé du champ"
+  },
+  "options_justification_help": {
+    "message": "Expliquez pourquoi ce compte doit recevoir ce badge (20 à 2 000 caractères).",
+    "description": "Aide du champ"
+  },
+  "options_contact": {
+    "message": "Contact (facultatif)",
+    "description": "Libellé du champ"
+  },
+  "options_contact_help": {
+    "message": "Lu uniquement par l'équipe.",
+    "description": "Aide du champ"
+  },
+  "options_evidence": {
+    "message": "Sources",
+    "description": "Libellé du champ"
+  },
+  "options_evidence_help": {
+    "message": "Un lien https:// par ligne, 10 au maximum.",
+    "description": "Aide du champ"
+  },
+  "options_submit": {
+    "message": "Envoyer la demande",
+    "description": "Bouton d'envoi"
+  },
+  "options_sending": {
+    "message": "Envoi en cours…",
+    "description": "Bouton pendant l'envoi"
+  },
+  "options_request_success": {
+    "message": "Demande envoyée. Merci, l'équipe l'examinera.",
+    "description": "Succès du formulaire de demande"
+  },
+  "options_error_account": {
+    "message": "Saisissez un identifiant numérique (chiffres uniquement).",
+    "description": "Erreur de validation"
+  },
+  "options_error_org": {
+    "message": "Saisissez l'identifiant numérique de l'organisation.",
+    "description": "Erreur de validation"
+  },
+  "options_error_org_title": {
+    "message": "Indiquez la fonction (200 caractères maximum).",
+    "description": "Erreur de validation"
+  },
+  "options_error_justification": {
+    "message": "La justification doit faire entre 20 et 2 000 caractères.",
+    "description": "Erreur de validation"
+  },
+  "options_error_evidence_https": {
+    "message": "Chaque lien doit commencer par https://.",
+    "description": "Erreur de validation"
+  },
+  "options_error_evidence_count": {
+    "message": "10 liens au maximum.",
+    "description": "Erreur de validation"
+  },
+  "options_error_comment": {
+    "message": "Le commentaire ne peut pas dépasser 1 000 caractères.",
+    "description": "Erreur de validation"
+  },
+  "options_error_contact": {
+    "message": "Le contact ne peut pas dépasser 200 caractères.",
+    "description": "Erreur de validation"
+  },
+  "options_error_title": {
+    "message": "Impossible d'envoyer",
+    "description": "Titre de l'alerte d'erreur"
+  },
+  "options_success_title": {
+    "message": "C'est envoyé",
+    "description": "Titre de l'alerte de succès"
+  },
+  "options_report_title": {
+    "message": "Signaler un badge",
+    "description": "Titre de section"
+  },
+  "options_report_desc": {
+    "message": "Un badge vous semble erroné ? Signalez-le, l'équipe vérifiera.",
+    "description": "Sous-titre du formulaire"
+  },
+  "options_report_reason": {
+    "message": "Motif",
+    "description": "Légende du choix du motif"
+  },
+  "options_report_comment": {
+    "message": "Commentaire (facultatif)",
+    "description": "Libellé du champ"
+  },
+  "options_report_submit": {
+    "message": "Envoyer le signalement",
+    "description": "Bouton d'envoi"
+  },
+  "options_report_success": {
+    "message": "Signalement envoyé. Merci.",
+    "description": "Succès du signalement"
+  },
+  "options_account_unknown": {
+    "message": "Ce compte n'a pas de badge Seat 12A.",
+    "description": "Compte introuvable"
+  },
+  "options_account_loading": {
+    "message": "Recherche du compte…",
+    "description": "Chargement du compte"
+  },
+  "options_account_card": {
+    "message": "Badge actuel du compte",
+    "description": "Étiquette de la carte du compte"
+  },
+  "options_account_own_badge": {
+    "message": "Badge propre",
+    "description": "Mention: le compte a son propre badge"
+  },
+  "options_account_org_badge": {
+    "message": "Via son organisation",
+    "description": "Mention: couleur héritée de l'organisation"
+  },
+  "options_about_title": {
+    "message": "À propos",
+    "description": "Titre de section"
+  },
+  "options_about_text": {
+    "message": "Seat 12A vérifie les faits et modère le débat sur X. Chaque vérification est validée par un humain avant d'être affichée. La même règle s'applique à tous les comptes, quel que soit leur bord politique. L'extension ne publie jamais rien sur X.",
+    "description": "Paragraphe de présentation"
+  },
+  "options_about_version": {
+    "message": "Version $1",
+    "description": "$1 = numéro de version"
+  },
+  "options_about_site": {
+    "message": "Visiter le site de Seat 12A",
+    "description": "Lien vers le site"
+  },
+  "options_about_privacy": {
+    "message": "Politique de confidentialité",
+    "description": "Lien vers la politique"
+  },
+  "options_badges_title": {
+    "message": "Les badges",
+    "description": "Titre de la légende des badges"
+  },
+  "options_close": {
+    "message": "Fermer",
+    "description": "Libellé accessible du bouton de fermeture d'une boîte de dialogue"
+  },
+  "options_document_title": {
+    "message": "Seat 12A · Options",
+    "description": "Titre de l'onglet du navigateur"
+  }
+}
