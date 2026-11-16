@@ -6,7 +6,7 @@ import { startApp, type App } from "~/content/app";
 import { chromeMock } from "../chrome-mock";
 import { load } from "./helpers";
 
-const ALLOWED = new Set(["platform", "external_id", "url", "author", "text", "lang_hint", "created_at", "observed_at", "metrics", "quoted_external_id", "parent_external_id", "media", "filter_version"]);
+const ALLOWED = new Set(["platform", "external_id", "author", "text", "lang_hint", "created_at", "observed_at", "metrics", "quoted_external_id", "parent_external_id", "media", "filter_version"]);
 
 const config: IngestConfig = { version: "v7", filters: { keywords: ["impôts", "vaccin", "chômage"], accounts: [], thresholds: {} } };
 const verdict = (id: string): PublicVerdict => ({
@@ -61,8 +61,8 @@ describe("pipeline", () => {
       expect(Object.keys(o).every((k) => ALLOWED.has(k))).toBe(true);
       expect(o.platform).toBe("x");
       expect(o.filter_version).toBe("v7");
-      expect(o.url).toBe(`https://x.com/${o.author.handle}/status/${o.external_id}`);
-      expect(Object.keys(o.author).every((k) => ["handle", "external_id", "display_name"].includes(k))).toBe(true);
+      expect("url" in o).toBe(false); // not part of Tower's item schema
+      expect(Object.keys(o.author).every((k) => ["handle", "external_id"].includes(k))).toBe(true);
     }
     const quote = obs.find((o) => o.external_id.endsWith("105"))!;
     expect(quote.quoted_external_id).toBe("1849999999999999998");

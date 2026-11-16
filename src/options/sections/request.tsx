@@ -55,7 +55,7 @@ export function RequestSection({ initialAccount = "" }: { initialAccount?: strin
       </Group>
 
       <Field id={`${uid}-account`} label={t("options_account_id")} help={t("options_account_id_help")} error={err("accountId")}>
-        {(a) => <Input {...a} required inputMode="numeric" pattern="^\d{1,20}$" autoComplete="off" value={values.accountId} onChange={(e) => set("accountId", e.target.value)} />}
+        {(a) => <Input {...a} required inputMode="numeric" pattern="^\d{1,19}$" autoComplete="off" value={values.accountId} onChange={(e) => set("accountId", e.target.value)} />}
       </Field>
 
       <div key={values.kind} className="animate-in fade-in-0 slide-in-from-top-1 duration-200 ease-out motion-reduce:animate-none">
@@ -80,7 +80,7 @@ export function RequestSection({ initialAccount = "" }: { initialAccount?: strin
       ) : (
         <div className="grid gap-5 sm:grid-cols-2">
           <Field id={`${uid}-org`} label={t("options_org_id")} error={err("orgId")}>
-            {(a) => <Input {...a} required inputMode="numeric" pattern="^\d{1,20}$" autoComplete="off" value={values.orgId} onChange={(e) => set("orgId", e.target.value)} />}
+            {(a) => <Input {...a} required inputMode="numeric" pattern="^\d{1,19}$" autoComplete="off" value={values.orgId} onChange={(e) => set("orgId", e.target.value)} />}
           </Field>
           <Field id={`${uid}-title`} label={t("options_org_title")} error={err("orgTitle")}>
             {(a) => <Input {...a} required maxLength={200} placeholder={t("options_org_title_placeholder")} value={values.orgTitle} onChange={(e) => set("orgTitle", e.target.value)} />}

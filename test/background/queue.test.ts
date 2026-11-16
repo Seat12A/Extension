@@ -77,7 +77,10 @@ describe("flush", () => {
     const token = await getToken();
     for (const c of cs) {
       expect(headersOf(c.init)["X-Installation-Token"]).toBe(token);
-      expect(Object.keys(JSON.parse(c.init.body as string))).toEqual(["items"]);
+      const body = JSON.parse(c.init.body as string);
+      // Tower contract: filter_version at batch level, items without filter_version / url.
+      expect(Object.keys(body).sort()).toEqual(["filter_version", "items"]);
+      for (const it of body.items) { expect(it).not.toHaveProperty("filter_version"); expect(it).not.toHaveProperty("url"); }
       expect(c.init.credentials).toBe("omit");
     }
     expect(await queueLen()).toBe(0);
@@ -239,5 +242,40 @@ describe("flush", () => {
   });
   it("status no_filters", async () => {
     expect((await getStatus()).state).toBe("no_filters");
+  });
+});
+
+describe("Tower contract (docs/api extension)", () => {
+  it("one filter_version per request: items of different versions go in separate batches", async () => {
+    const { enqueue, flush } = await import("~/background/queue");
+    const { chromeMock } = await import("../chrome-mock");
+    await chromeMock.storage.local.set({ ingestConfig: { etag: null, version: "v2", filters: { keywords: [], accounts: [], thresholds: {} }, fetchedAt: Date.now() } });
+    const calls: any[] = [];
+    vi.stubGlobal("fetch", vi.fn(async (_u: string, init: RequestInit) => {
+      const b = JSON.parse(init.body as string); calls.push(b);
+      return new Response(JSON.stringify({ accepted: b.items.length, new: b.items.length, duplicates: 0, rejected: 0, errors: [] }), { status: 202 });
+    }));
+    const mk = (id: string, v: string) => ({ platform: "x" as const, external_id: id, author: { handle: "a" }, text: "t", observed_at: new Date().toISOString(), filter_version: v });
+    await enqueue([mk("1", "v1"), mk("2", "v2"), mk("3", "v1")]);
+    await flush();
+    expect(calls.map((c) => [c.filter_version, c.items.map((i: any) => i.external_id)])).toEqual([["v1", ["1", "3"]], ["v2", ["2"]]]);
+  });
+
+  it("401 TWR-ING-001: regenerates the token once and retries", async () => {
+    const { enqueue, flush } = await import("~/background/queue");
+    const { chromeMock } = await import("../chrome-mock");
+    await chromeMock.storage.local.set({ installToken: "old-token-old-token-old-token", ingestConfig: { etag: null, version: "v1", filters: { keywords: [], accounts: [], thresholds: {} }, fetchedAt: Date.now() } });
+    const tokens: string[] = [];
+    vi.stubGlobal("fetch", vi.fn(async (_u: string, init: RequestInit) => {
+      const tk = (init.headers as Record<string, string>)["X-Installation-Token"]!; tokens.push(tk);
+      return tokens.length === 1
+        ? new Response(JSON.stringify({ error: { code: "TWR-ING-001", message: "bad token" } }), { status: 401 })
+        : new Response(JSON.stringify({ accepted: 1, new: 1, duplicates: 0, rejected: 0, errors: [] }), { status: 202 });
+    }));
+    await enqueue([{ platform: "x", external_id: "9", author: { handle: "a" }, text: "t", observed_at: new Date().toISOString(), filter_version: "v1" }]);
+    await flush();
+    expect(tokens).toHaveLength(2);
+    expect(tokens[1]).not.toBe(tokens[0]);
+    expect(tokens[1]).toMatch(/^[A-Za-z0-9_-]{43}$/);
   });
 });

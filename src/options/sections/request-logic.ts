@@ -14,7 +14,7 @@ export interface RequestValues {
 
 export type RequestErrors = Partial<Record<"accountId" | "orgId" | "orgTitle" | "justification" | "contact" | "evidence", string>>;
 
-export const ID_PATTERN = /^\d{1,20}$/;
+export const ID_PATTERN = /^\d{1,19}$/;
 export const MAX_EVIDENCE = 10;
 
 export function parseEvidence(text: string): string[] {

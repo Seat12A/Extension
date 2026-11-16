@@ -20,11 +20,15 @@ export interface IngestFilters {
 export interface IngestConfig { version: string | null; filters: IngestFilters }
 
 export type MediaKind = "image" | "video" | "audio" | "document";
-export interface ObservationMetrics { views?: number; likes?: number; reposts?: number; replies?: number }
+export interface ObservationMetrics { views?: number; likes?: number; reposts?: number; replies?: number; quotes?: number; bookmarks?: number }
+/**
+ * One observed post, as queued inside the extension. `filter_version` is internal: on the
+ * wire it moves to the batch (`IngestRequest.filter_version`), since Tower refuses unknown
+ * item fields (422 TWR-GEN-001).
+ */
 export interface ObservationItem {
   platform: Platform;
   external_id: string;
-  url?: string;
   author: { handle: string; external_id?: string; display_name?: string };
   text: string;
   lang_hint?: string;
@@ -36,7 +40,9 @@ export interface ObservationItem {
   media?: { kind: MediaKind; url: string }[];
   filter_version: string;
 }
-export interface IngestRequest { items: ObservationItem[] }
+/** Item exactly as accepted by `POST /v1/ingest/observations`. */
+export type IngestItem = Omit<ObservationItem, "filter_version">;
+export interface IngestRequest { filter_version: string | null; items: IngestItem[] }
 export interface IngestResponse {
   accepted: number;
   new: number;
@@ -69,7 +75,7 @@ export interface VerdictClaim {
 export interface PublicVerdict {
   platform: Platform;
   external_id: string;
-  url: string;
+  url: string | null;
   lang: string;
   claims: VerdictClaim[];
 }

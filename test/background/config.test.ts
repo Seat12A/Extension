@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { getConfig, refreshConfig } from "~/background/config";
 import { headersOf, json, stubFetch } from "./helpers";
 
@@ -37,5 +37,16 @@ describe("config", () => {
     stubFetch(() => json({ version: "v3", filters: { keywords: "nope", accounts: [], thresholds: {} } }, 200));
     await refreshConfig();
     expect((await getConfig())?.version).toBe("v2");
+  });
+});
+
+describe("config contract: no active version", () => {
+  it("version null with filters {} replaces the previous config (nothing is sent anymore)", async () => {
+    const { refreshConfig, getConfig } = await import("~/background/config");
+    const { chromeMock } = await import("../chrome-mock");
+    await chromeMock.storage.local.set({ ingestConfig: { etag: '"a"', version: "v1", filters: { keywords: ["x"], accounts: [], thresholds: {} }, fetchedAt: Date.now() } });
+    vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify({ version: null, filters: {} }), { status: 200, headers: { etag: 'W/"0123456789abcdef"' } })));
+    await refreshConfig();
+    expect(await getConfig()).toEqual({ version: null, filters: { keywords: [], accounts: [], thresholds: {} } });
   });
 });

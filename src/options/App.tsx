@@ -19,7 +19,7 @@ export function App() {
   }, []);
   useEffect(() => { Object.assign(document, { title: t("options_document_title") }); }, [t]);
 
-  const account = /^\d{1,20}$/.test(params.account ?? "") ? params.account! : "";
+  const account = /^\d{1,19}$/.test(params.account ?? "") ? params.account! : "";
   const change = (next: string) => {
     // Keep the hash in sync with the active tab (the prefilled account id stays in memory).
     history.replaceState(null, "", buildHash(next as OptionsTab));
