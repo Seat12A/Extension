@@ -3,7 +3,7 @@
  * Every icon used by the UI is re-exported here so the bundle only ships what is used.
  * Icons are decorative by default (aria-hidden); give them a label at the call site if needed.
  */
-import type { SVGProps } from "react";
+import type { ComponentType, SVGProps } from "react";
 import Close from "@material-symbols/svg-400/rounded/close.svg?react";
 import Check from "@material-symbols/svg-400/rounded/check.svg?react";
 import ExpandMore from "@material-symbols/svg-400/rounded/keyboard_arrow_down.svg?react";
@@ -33,7 +33,7 @@ import DataObject from "@material-symbols/svg-400/rounded/data_object.svg?react"
 import Policy from "@material-symbols/svg-400/rounded/policy.svg?react";
 
 type IconComponent = (props: SVGProps<SVGSVGElement>) => React.ReactElement;
-const wrap = (C: IconComponent): IconComponent => {
+const wrap = (C: ComponentType<SVGProps<SVGSVGElement>>): IconComponent => {
   const Wrapped = ({ className, ...rest }: SVGProps<SVGSVGElement>) => (
     <C aria-hidden="true" focusable="false" fill="currentColor" className={className} {...rest} />
   );

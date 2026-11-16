@@ -63,7 +63,7 @@ export type ResponseFor<R extends Request> = ResponseMap[R["type"]];
 
 /** Typed wrapper around chrome.runtime.sendMessage. Rejects if the worker answers `{__error}`. */
 export async function send<R extends Request>(req: R): Promise<ResponseFor<R>> {
-  const res = (await chrome.runtime.sendMessage(req)) as ResponseFor<R> | { __error: string };
-  if (res && typeof res === "object" && "__error" in res) throw new Error(res.__error);
+  const res: unknown = await chrome.runtime.sendMessage(req);
+  if (res && typeof res === "object" && "__error" in res) throw new Error(String((res as { __error: unknown }).__error));
   return res as ResponseFor<R>;
 }
