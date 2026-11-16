@@ -1,0 +1,51 @@
+{
+  "extName": { "message": "Seat 12A", "description": "Nom de l'extension (manifeste)" },
+  "extShortName": { "message": "Seat 12A", "description": "Nom court" },
+  "extDescription": { "message": "Vérifications des faits et badges Seat 12A, directement dans X.", "description": "Description du manifeste" },
+  "generic_unknown": { "message": "Inconnu", "description": "Libellé générique pour une valeur inconnue" },
+  "brand_tagline": { "message": "Fact-checking et modération, côté hublot.", "description": "Accroche de la marque" },
+  "logo_alt": { "message": "Logo Seat 12A", "description": "Texte alternatif du logo" },
+
+  "veracity_true": { "message": "Vrai", "description": "Issue d'une vérification" },
+  "veracity_mostly_true": { "message": "Plutôt vrai", "description": "Issue d'une vérification" },
+  "veracity_misleading": { "message": "Trompeur", "description": "Issue d'une vérification" },
+  "veracity_false": { "message": "Faux", "description": "Issue d'une vérification" },
+  "veracity_unverifiable": { "message": "Invérifiable", "description": "Issue d'une vérification" },
+  "veracity_unknown": { "message": "Vérifié", "description": "Issue inconnue (valeur ajoutée côté serveur)" },
+
+  "context_need_none": { "message": "Pas de contexte nécessaire", "description": "Besoin de contexte" },
+  "context_need_useful": { "message": "Contexte utile", "description": "Besoin de contexte" },
+  "context_need_necessary": { "message": "Contexte nécessaire", "description": "Besoin de contexte" },
+  "context_need_unknown": { "message": "Contexte", "description": "Besoin de contexte inconnu" },
+
+  "badge_category_institutional": { "message": "Institution", "description": "Catégorie de badge" },
+  "badge_category_organization": { "message": "Organisation", "description": "Catégorie de badge" },
+  "badge_category_media": { "message": "Média", "description": "Catégorie de badge" },
+  "badge_category_expert": { "message": "Expert", "description": "Catégorie de badge" },
+  "badge_category_personality": { "message": "Personnalité", "description": "Catégorie de badge" },
+  "badge_category_unknown": { "message": "Compte vérifié", "description": "Catégorie de badge inconnue" },
+
+  "report_reason_wrong_category": { "message": "Mauvaise catégorie", "description": "Motif de signalement" },
+  "report_reason_not_eligible": { "message": "Compte non éligible", "description": "Motif de signalement" },
+  "report_reason_impersonation": { "message": "Usurpation d'identité", "description": "Motif de signalement" },
+  "report_reason_wrong_affiliation": { "message": "Mauvaise affiliation", "description": "Motif de signalement" },
+  "report_reason_other": { "message": "Autre", "description": "Motif de signalement" },
+  "report_reason_unknown": { "message": "Autre", "description": "Motif inconnu" },
+
+  "language_fr": { "message": "Français", "description": "Nom de langue (toujours dans sa propre langue)" },
+  "language_en": { "message": "English", "description": "Nom de langue (toujours dans sa propre langue)" },
+  "language_auto": { "message": "Langue du navigateur", "description": "Option de langue automatique" },
+  "language_unknown": { "message": "Autre langue", "description": "Langue inconnue" },
+
+  "error_generic": { "message": "Une erreur est survenue. Réessayez plus tard.", "description": "Erreur générique" },
+  "error_network": { "message": "Impossible de joindre Seat 12A.", "description": "Erreur réseau" },
+  "error_TWR_BDG_019": { "message": "Trop d'envois. Réessayez dans une minute.", "description": "Limite par IP des formulaires" },
+  "error_TWR_BDG_013": { "message": "Une demande identique est déjà en attente.", "description": "Demande déjà en attente" },
+  "error_TWR_BDG_001": { "message": "Ce compte n'affiche aucun badge Seat 12A.", "description": "Compte sans badge" },
+  "error_TWR_BDG_003": { "message": "Requête de badges invalide.", "description": "Lot vide ou trop grand" },
+  "error_TWR_ING_002": { "message": "Quota quotidien atteint. Reprise à minuit (UTC).", "description": "Quota d'envoi atteint" },
+  "error_TWR_ING_006": { "message": "Identifiant invalide.", "description": "ID invalide" },
+  "error_TWR_ING_007": { "message": "Trop de requêtes. Nouvel essai automatique.", "description": "Limite par IP de l'ingestion" },
+  "error_TWR_ING_010": { "message": "Service momentanément indisponible.", "description": "Panne serveur" },
+  "error_TWR_GEN_001": { "message": "Données invalides.", "description": "Validation générique" }
+}
