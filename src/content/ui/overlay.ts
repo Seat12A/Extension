@@ -1,6 +1,6 @@
 import { applyStyles, createHost, h, isolateEvents } from "./dom";
 import { registerWidget } from "./state";
-import { BASE_CSS, OVERLAY_CSS } from "./styles";
+import { BASE_CSS, MOTION_CSS, OVERLAY_CSS } from "./styles";
 
 export interface Overlay { host: HTMLElement; root: ShadowRoot; tip: HTMLElement; layer: HTMLElement }
 let overlay: Overlay | null = null;
@@ -9,7 +9,7 @@ let overlay: Overlay | null = null;
 export function getOverlay(): Overlay {
   if (overlay && overlay.host.isConnected) return overlay;
   const { host, root } = createHost("seat12a-overlay");
-  applyStyles(root, BASE_CSS + OVERLAY_CSS);
+  applyStyles(root, BASE_CSS + MOTION_CSS + OVERLAY_CSS);
   const tip = h("div", { class: "tip", role: "tooltip" });
   const layer = h("div", { class: "layer" });
   root.append(tip, layer);
@@ -33,6 +33,8 @@ export function place(el: HTMLElement, anchor: Element, prefer: "above" | "below
   const top = above ? r.top - height - gap : r.bottom + gap;
   const want = align === "start" ? r.left - 12 : r.left + r.width / 2 - width / 2;
   const left = Math.max(8, Math.min(want, vw - width - 8));
+  // Side the element opened on, so the entrance animation slides away from the anchor.
+  el.dataset.side = above ? "top" : "bottom";
   el.style.top = `${Math.max(8, top)}px`;
   el.style.left = `${left}px`;
 }

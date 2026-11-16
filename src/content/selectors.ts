@@ -62,10 +62,21 @@ function firstTextNode(root: Element): Text | null {
   return walker.nextNode() as Text | null;
 }
 
-export interface NameSpot { parent: Element; after: Element }
+/** `after`: node to insert the badge after; `name`: the name element (font reference). */
+export interface NameSpot { parent: Element; after: Element; name: Element }
 
 /**
- * Where to put the badge in a name container: right after the display-name text.
+ * Where to put the badge in a name container: on the SAME ROW as the display name,
+ * exactly where X puts its own checkmark.
+ *
+ * X's name markup is `a > div[dir] (flex row) > span > span "Name"` and the check is a
+ * sibling `span > svg[data-testid=icon-verified]` inside that `div[dir]`. Every X block
+ * (`css-175oi2r`) is a COLUMN flex container, so inserting after the `div[dir]` (or
+ * anywhere outside the row) wraps the badge onto its own line. Rules:
+ *   1. if X's check is present, insert right after its wrapper (the check is hidden
+ *      by CSS, the badge takes its exact slot);
+ *   2. otherwise insert right after the outermost inline `<span>` holding the name,
+ *      i.e. still inside the row.
  * `container` is a `User-Name`, a profile header `UserName` or a `UserCell`.
  */
 export function findNameSpot(container: Element): NameSpot | null {
@@ -78,9 +89,20 @@ export function findNameSpot(container: Element): NameSpot | null {
   const textNode = firstTextNode(anchor);
   const textEl = textNode?.parentElement;
   if (!textEl) return null;
-  let el: Element = textEl;
-  while (el.parentElement && el.parentElement !== anchor && el.parentElement.children.length === 1) el = el.parentElement;
-  const parent = el.parentElement;
-  if (!parent) return null;
-  return { parent, after: el };
+  // Outermost inline span of the name, staying inside its row.
+  let nameSpan: Element = textEl;
+  while (nameSpan.parentElement && nameSpan.parentElement !== anchor && nameSpan.parentElement.localName === "span") {
+    nameSpan = nameSpan.parentElement;
+  }
+  const row = nameSpan.parentElement;
+  if (!row) return null;
+  // 1. X's own check, in the same row (or the next sibling row X sometimes uses).
+  const check = row.querySelector(SEL.verified);
+  if (check) {
+    let wrap: Element = check;
+    while (wrap.parentElement && wrap.parentElement !== row) wrap = wrap.parentElement;
+    if (wrap.parentElement === row) return { parent: row, after: wrap, name: nameSpan };
+  }
+  // 2. Right after the name.
+  return { parent: row, after: nameSpan, name: nameSpan };
 }

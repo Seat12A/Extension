@@ -16,7 +16,7 @@ import { passesFilters } from "./filter";
 import { pageKind } from "./page";
 import { greyCheck, parsePost, type ParsedPost } from "./parser";
 import { BADGE_MARK, NAME_CONTAINERS, SEL, findNameSpot, followButtonId, readOwnHandle } from "./selectors";
-import { createBadge } from "./ui/badge";
+import { createBadge, fitToName } from "./ui/badge";
 import { ui } from "./ui/state";
 import { createVerdict } from "./ui/verdict";
 
@@ -149,7 +149,9 @@ export function createPipeline(initial: Settings): Pipeline {
     if (!container.isConnected || hasBadge(container)) return;
     const spot = findNameSpot(container);
     if (!spot) return;
-    spot.after.after(createBadge(account, id));
+    const badge = createBadge(account, id);
+    spot.after.after(badge);
+    fitToName(badge, spot.name);
     container.setAttribute(BADGE_MARK, id);
   }
 

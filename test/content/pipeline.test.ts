@@ -181,3 +181,18 @@ describe("pipeline", () => {
     expect(XMLHttpRequest).not.toHaveBeenCalled();
   });
 });
+
+describe("badge sizing", () => {
+  it("gives the host the name's font-size", async () => {
+    load("timeline.html");
+    document.querySelectorAll('[data-testid="User-Name"] a[role="link"] > div[dir="ltr"]').forEach((e) => ((e as HTMLElement).style.fontSize = "15px"));
+    const cell = document.createElement("div");
+    cell.innerHTML = '<div data-testid="UserCell"><a href="/ivan" role="link"><span>Ivan</span></a><a href="/ivan" role="link"><span>@ivan</span></a><button data-testid="555-follow"></button></div>';
+    document.body.append(cell);
+    chromeMock.messageHandler = (msg) => (msg.type === "getConfig" ? config : msg.type === "lookupBadges" ? Object.fromEntries(msg.ids.map((i: string) => [i, expert])) : {});
+    app = await startApp();
+    await vi.advanceTimersByTimeAsync(4000);
+    const host = document.querySelector<HTMLElement>('article [data-testid="User-Name"] seat12a-badge')!;
+    expect(host.style.fontSize).toBe("15px");
+  });
+});

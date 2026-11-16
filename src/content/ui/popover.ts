@@ -2,7 +2,7 @@ import type { BadgeAccount, BadgeAccountDetail, BadgeAffiliation } from "~/share
 import { send } from "~/shared/messages";
 import { badgeColors } from "~/shared/palette";
 import { h, safeHttps } from "./dom";
-import { icon, sealIcon } from "./icons";
+import { brandMark, icon, sealIcon } from "./icons";
 import { getOverlay, place } from "./overlay";
 import { ui } from "./state";
 
@@ -18,7 +18,13 @@ export function closePopover(restoreFocus = true): void {
   const { card, anchor, cleanup } = current;
   current = null;
   cleanup();
-  card.remove();
+  // shadcn-style exit (fade + zoom-out-95, 100 ms), then removal.
+  card.dataset.state = "closed";
+  const done = () => card.remove();
+  if (typeof card.getAnimations === "function" && matchMedia?.("(prefers-reduced-motion: no-preference)").matches) {
+    card.addEventListener("animationend", done, { once: true });
+    setTimeout(done, 160);
+  } else done();
   if (restoreFocus && anchor.isConnected) anchor.focus({ preventScroll: true });
 }
 
@@ -42,28 +48,50 @@ function openOptions(hash: string): void {
   closePopover(false);
 }
 
-function body(detail: BadgeAccount | BadgeAccountDetail, accountId: string): Node[] {
+function iconButton(name: "addModerator" | "flag", label: string, onclick: () => void): HTMLElement {
+  // Discreet icon-only action; the translated label is both the accessible name and the native tooltip.
+  return h("button", { class: "ib", type: "button", "aria-label": label, title: label, onclick }, icon(name, 18));
+}
+
+/** Badge popover: identity first (seal + category + label), affiliations, then a quiet footer. */
+function body(detail: BadgeAccount | BadgeAccountDetail): Node[] {
   const { t } = ui;
   const category = t.enumLabel("badge_category", detail.category);
   const colors = badgeColors(detail.category, ui.theme, detail.color);
   const affs = ("affiliations" in detail && detail.affiliations?.length ? detail.affiliations : detail.affiliation ? [detail.affiliation] : []);
-  const label = detail.badge?.label?.trim();
-  const out: Node[] = [];
-  out.push(h("div", { class: "card-head" }, sealIcon(22, colors.fill, colors.stroke), h("div", { class: "card-title" }, category)));
-  if (label) out.push(h("p", { class: "label" }, label));
-  if (affs.length) {
-    out.push(h("div", { class: "h" }, t.t("content_popover_affiliations")));
-    out.push(h("ul", { class: "affs" }, ...affs.map(affiliationRow)));
-  }
-  out.push(
+  const main = detail.affiliation;
+  const label = detail.badge?.label?.trim()
+    || (main ? (main.title?.trim() ? t.t("content_tip_affiliation", main.title.trim(), main.org.label) : main.org.label) : "");
+  const out: Node[] = [
     h(
       "div",
-      { class: "actions" },
-      h("button", { class: "pill primary", type: "button", onclick: () => openOptions(`request?account=${encodeURIComponent(accountId)}`) }, icon("addModerator", 16), t.t("content_action_request")),
-      h("button", { class: "pill", type: "button", onclick: () => openOptions(`report?account=${encodeURIComponent(accountId)}`) }, icon("flag", 16), t.t("content_action_report")),
+      { class: "card-head" },
+      sealIcon(28, colors.fill, colors.stroke),
+      h("div", { class: "card-id" }, h("div", { class: "card-title" }, category), label ? h("div", { class: "card-sub" }, label) : null),
+    ),
+  ];
+  if (affs.length) {
+    out.push(
+      h("div", { class: "sect" }, h("div", { class: "h" }, t.t("content_popover_affiliations")), h("ul", { class: "affs" }, ...affs.map(affiliationRow))),
+    );
+  }
+  return out;
+}
+
+function footer(accountId: string): HTMLElement {
+  const { t } = ui;
+  const [before = "", after = ""] = t.t("content_verified_by", "\u0000").split("\u0000");
+  return h(
+    "div",
+    { class: "card-foot" },
+    h("span", { class: "by" }, brandMark(14, ui.theme !== "light"), h("span", {}, before, h("strong", {}, t.t("content_brand")), after)),
+    h(
+      "span",
+      { class: "acts" },
+      iconButton("addModerator", t.t("content_action_request"), () => openOptions(`request?account=${encodeURIComponent(accountId)}`)),
+      iconButton("flag", t.t("content_action_report"), () => openOptions(`report?account=${encodeURIComponent(accountId)}`)),
     ),
   );
-  return out;
 }
 
 /** Popover card (one at a time). Shows the badge at once, then enriches it with account details. */
@@ -72,21 +100,17 @@ export async function openPopover(anchor: HTMLElement, accountId: string, accoun
   closePopover(false);
   const { t } = ui;
   const o = getOverlay();
-  const closeBtn = h("button", { class: "x", type: "button", "aria-label": t.t("content_popover_close"), onclick: () => closePopover() }, icon("close", 18));
   const card = h("div", { class: "card", role: "dialog", "aria-label": t.t("content_popover_label"), tabindex: -1 });
-  const footer = () => h("div", { class: "card-foot" }, sealIcon(14, "#006AFF"), h("span", {}, t.t("content_brand")));
   const fill = (nodes: Node[], status?: string) => {
     card.replaceChildren(...nodes);
-    const head = card.querySelector(".card-head");
-    head?.append(closeBtn);
     if (status) card.append(h("p", { class: "status", role: "status" }, status));
-    card.append(footer());
-    place(card, anchor, "below", 300, "start");
+    card.append(footer(accountId));
+    place(card, anchor, "below", 280, "start");
   };
 
-  fill(body(account, accountId), t.t("content_popover_loading"));
+  fill(body(account), t.t("content_popover_loading"));
   o.layer.append(card);
-  place(card, anchor, "below", 300, "start");
+  place(card, anchor, "below", 280, "start");
 
   const onKey = (e: KeyboardEvent) => {
     if (e.key === "Escape") { e.stopPropagation(); closePopover(); return; }
@@ -117,16 +141,16 @@ export async function openPopover(anchor: HTMLElement, accountId: string, accoun
       window.removeEventListener("scroll", onScroll, true);
     },
   };
-  closeBtn.focus({ preventScroll: true });
+  card.focus({ preventScroll: true });
 
   try {
     const detail = await send({ type: "getAccountDetail", id: accountId });
     if (current?.card !== card) return;
-    if (detail) fill(body(detail, accountId));
-    else fill(body(account, accountId));
+    if (detail) fill(body(detail));
+    else fill(body(account));
   } catch {
     if (current?.card !== card) return;
-    fill(body(account, accountId), t.t("content_popover_error"));
+    fill(body(account), t.t("content_popover_error"));
   }
-  if (current?.card === card && !o.root.activeElement) closeBtn.focus({ preventScroll: true });
+  if (current?.card === card && !o.root.activeElement) card.focus({ preventScroll: true });
 }

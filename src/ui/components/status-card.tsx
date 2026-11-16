@@ -52,13 +52,13 @@ export function StatusCard({ status, failed }: Props) {
   return (
     <section aria-live="polite" aria-busy={!status && !failed} className="flex items-center gap-3 rounded-lg border bg-card p-4">
       {status || failed ? (
-        <>
+        <div key={status?.state ?? "failed"} className="flex min-w-0 items-center gap-3 animate-in fade-in-0 slide-in-from-bottom-1 duration-200 ease-out">
           {icon}
           <div className="min-w-0">
             <h2 className="text-[15px] leading-5 font-semibold text-foreground" data-testid="status-title">{title}</h2>
             <p className="text-[13px] leading-[18px] text-ink-slate" data-testid="status-desc">{desc}</p>
           </div>
-        </>
+        </div>
       ) : (
         <>
           <Skeleton className="size-6 rounded-full" />

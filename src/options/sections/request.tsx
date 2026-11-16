@@ -58,6 +58,7 @@ export function RequestSection({ initialAccount = "" }: { initialAccount?: strin
         {(a) => <Input {...a} required inputMode="numeric" pattern="^\d{1,20}$" autoComplete="off" value={values.accountId} onChange={(e) => set("accountId", e.target.value)} />}
       </Field>
 
+      <div key={values.kind} className="animate-in fade-in-0 slide-in-from-top-1 duration-200 ease-out motion-reduce:animate-none">
       {values.kind === "badge" ? (
         <Field id={`${uid}-category`} label={t("options_category")}>
           {({ id }) => (
@@ -86,6 +87,7 @@ export function RequestSection({ initialAccount = "" }: { initialAccount?: strin
           </Field>
         </div>
       )}
+      </div>
 
       <Field id={`${uid}-justification`} label={t("options_justification")} help={t("options_justification_help")} error={err("justification")}>
         {(a) => <Textarea {...a} required minLength={20} maxLength={2000} rows={5} value={values.justification} onChange={(e) => set("justification", e.target.value)} />}

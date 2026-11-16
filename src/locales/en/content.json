@@ -35,10 +35,6 @@
     "message": "Affiliations",
     "description": "Heading of the affiliations list."
   },
-  "content_popover_close": {
-    "message": "Close",
-    "description": "Close button label."
-  },
   "content_action_request": {
     "message": "Request a badge",
     "description": "Pill button opening the badge request form."
@@ -94,5 +90,13 @@
   "content_external_link": {
     "message": "$1 (new tab)",
     "description": "aria-label of an external link. $1 = host."
+  },
+  "content_verified_by": {
+    "message": "Verified by $1",
+    "description": "Badge popover footer; $1 = “Seat 12A”, shown in bold."
+  },
+  "content_translated_from": {
+    "message": "Machine-translated (original in $1)",
+    "description": "Machine-translated note; $1 = original language, e.g. “French”."
   }
 }

@@ -40,7 +40,7 @@ export function App() {
   const version = chrome.runtime.getManifest?.().version ?? "";
 
   return (
-    <main className="flex w-[360px] flex-col gap-4 bg-background p-4">
+    <main className="flex w-[360px] flex-col gap-4 bg-background p-4 animate-in fade-in-0 duration-200 ease-out">
       <header className="flex items-center justify-between">
         <div className="flex items-center gap-2.5 text-foreground">
           <LogoMark className="h-7" />

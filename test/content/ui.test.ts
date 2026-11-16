@@ -38,8 +38,12 @@ describe("badge widget", () => {
     const overlay = document.querySelector("seat12a-overlay")!.shadowRoot!;
     const card = overlay.querySelector(".card")!;
     expect(card.getAttribute("role")).toBe("dialog");
-    const pills = Array.from(card.querySelectorAll<HTMLButtonElement>("button.pill"));
-    pills[0]!.click();
+    expect(card.querySelector("button[aria-label*='×'], .x")).toBeNull(); // no close cross
+    expect(card.querySelector(".card-foot strong")!.textContent).toBe("Seat 12A");
+    const actions = Array.from(card.querySelectorAll<HTMLButtonElement>(".card-foot button.ib"));
+    expect(actions).toHaveLength(2);
+    for (const b of actions) expect(b.getAttribute("aria-label")).toBe(b.getAttribute("title"));
+    actions[0]!.click();
     expect(chromeMock.runtime.sendMessage).toHaveBeenCalledWith({ type: "openOptions", hash: "request?account=42" });
     expect(overlay.querySelector(".card")).toBeNull();
   });
