@@ -58,12 +58,43 @@ une catégorie que le client ne connaît pas encore) :
 Source unique : `src/shared/palette.ts`. Le jaune « Organisation » n'atteint pas 3:1
 sur blanc : en mode clair il porte un contour `#B98B00`.
 
+### Badge à côté du nom
+
+Inséré **dans la ligne du nom**, à la place exacte de la coche de X (les blocs de X sont
+des flex en colonne : insérer ailleurs provoque un retour à la ligne). Taille relative au
+nom, mesurée sur la référence Bluesky : **0,8 em** (≈ 1,1 × hauteur des capitales),
+**centré sur les capitales**, espace de **0,25 em** avant (le sceau n'a pas de blanc
+interne). Le nom se tronque avant que le badge ne disparaisse.
+
+Au clic, un **détail** : sceau + catégorie + libellé (ou « titre · organisation »),
+affiliations, puis un pied discret « Vérifié par **Seat 12A** » avec deux actions en
+icônes (demander un badge, signaler). Pas de croix : Échap, clic extérieur ou défilement
+ferment.
+
 ### Vérifications
 
-Une pilule compacte sous le post (« Seat 12A · Faux · 2 affirmations ») qui s'ouvre sur
-le détail. Tons par issue (`veracityTone`) : vert (vrai), cyan (plutôt vrai), ambre
-(trompeur), rouge (faux), ardoise (invérifiable). Le post lui-même n'est jamais masqué
-ni modifié. Même rendu pour tous les comptes.
+Une **carte** sous le post (fond doux, filet neutre, jamais de contour coloré) :
+
+- en-tête : pastille d'issue (icône + libellé, fond teinté et contour fin dans le ton),
+  nombre d'affirmations, puis la marque (hublot + « Seat 12A ») et le chevron. La marque
+  est le hublot, **jamais le sceau** : le sceau signifie « compte badgé ».
+- dépliée, trois niveaux par affirmation : l'affirmation (avec sa pastille seulement s'il
+  y en a plusieurs), la note, une ligne discrète (sources en liens, traduction, contenu
+  identique) ; la date de vérification une seule fois en pied, avec « Voir sur Seat 12A ».
+
+Tons par issue (`veracityTone`) : vert (vrai), cyan (plutôt vrai), ambre (trompeur), rouge
+(faux), ardoise (invérifiable) ; l'icône double la couleur (jamais la couleur seule). Le
+post n'est jamais masqué ni modifié. Même rendu pour tous les comptes.
+
+![Éléments intégrés à X](screenshots/x-integration.png)
+
+### Animations
+
+Alignées sur shadcn/ui (tw-animate-css) : entrée = fondu + zoom 95 % + léger glissement
+depuis l'ancre, 150–180 ms, `cubic-bezier(.16,1,.3,1)` ; sortie 100 ms ; survols 120 ms.
+Popup et options : classes `animate-in` de shadcn (onglets, alertes, carte d'état,
+champs conditionnels, boutons `active:scale`). Désactivées avec
+`prefers-reduced-motion`.
 
 ## Marque
 
