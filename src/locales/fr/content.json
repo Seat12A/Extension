@@ -1,0 +1,102 @@
+{
+  "content_brand": {
+    "message": "Seat 12A",
+    "description": "Product name shown in widgets (not translated)."
+  },
+  "content_badge_label": {
+    "message": "Badge Seat 12A : $1",
+    "description": "aria-label of a badge. $1 = category label."
+  },
+  "content_badge_label_affiliation": {
+    "message": "Badge Seat 12A : $1 · $2",
+    "description": "aria-label of an affiliation badge. $1 = title, $2 = organisation."
+  },
+  "content_tip_affiliation": {
+    "message": "$1 · $2",
+    "description": "Tooltip line: $1 = title, $2 = organisation."
+  },
+  "content_org_logo_alt": {
+    "message": "Logo de $1",
+    "description": "Alt text of an organisation logo. $1 = organisation."
+  },
+  "content_popover_label": {
+    "message": "Détails du badge Seat 12A",
+    "description": "Accessible name of the badge popover."
+  },
+  "content_popover_loading": {
+    "message": "Chargement…",
+    "description": "Shown while badge details load."
+  },
+  "content_popover_error": {
+    "message": "Impossible de charger les détails du badge.",
+    "description": "Error in the badge popover."
+  },
+  "content_popover_affiliations": {
+    "message": "Affiliations",
+    "description": "Heading of the affiliations list."
+  },
+  "content_action_request": {
+    "message": "Demander un badge",
+    "description": "Pill button opening the badge request form."
+  },
+  "content_action_report": {
+    "message": "Signaler ce badge",
+    "description": "Pill button opening the badge report form."
+  },
+  "content_verdict_label": {
+    "message": "Vérification Seat 12A : $1",
+    "description": "aria-label of the collapsed verdict row. $1 = veracity."
+  },
+  "content_claims_count_one": {
+    "message": "$1 affirmation",
+    "description": "Number of claims (singular)."
+  },
+  "content_claims_count_other": {
+    "message": "$1 affirmations",
+    "description": "Number of claims (plural)."
+  },
+  "content_claim_note_heading": {
+    "message": "Note de contexte",
+    "description": "Heading above the note of a claim."
+  },
+  "content_machine_translated": {
+    "message": "Traduction automatique",
+    "description": "Shown when a note was machine translated."
+  },
+  "content_note_lang": {
+    "message": "Note en $1",
+    "description": "Language of a note differing from the UI. $1 = language name."
+  },
+  "content_inherited": {
+    "message": "Vérification d'un contenu identique",
+    "description": "Shown when the verdict comes from another identical post."
+  },
+  "content_inherited_link": {
+    "message": "Voir l'original",
+    "description": "Link to the original fact-checked content."
+  },
+  "content_validated_on": {
+    "message": "Vérifié le $1",
+    "description": "Validation date. $1 = formatted date."
+  },
+  "content_sources": {
+    "message": "Sources",
+    "description": "Heading of the links list."
+  },
+  "content_view_on_site": {
+    "message": "Voir sur Seat 12A",
+    "description": "Footer link of a verdict."
+  },
+  "content_external_link": {
+    "message": "$1 (nouvel onglet)",
+    "description": "aria-label of an external link. $1 = host."
+  },
+  "content_verified_by": {
+    "message": "Vérifié par $1",
+    "description": "Pied du popover de badge ; $1 = « Seat 12A » affiché en gras."
+  },
+  "content_translated_from": {
+    "message": "Traduit automatiquement (original en $1)",
+    "description": "Note traduite automatiquement ; $1 = langue d'origine, ex. « anglais »."
+  }
+}

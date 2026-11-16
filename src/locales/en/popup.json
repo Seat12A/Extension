@@ -1,0 +1,110 @@
+{
+  "popup_open_options": {
+    "message": "Open options",
+    "description": "Libellé du bouton réglages (popup)"
+  },
+  "popup_status_active": {
+    "message": "Active",
+    "description": "Titre du statut: envoi normal"
+  },
+  "popup_sent_today_one": {
+    "message": "$1 post sent today",
+    "description": "Compteur du jour (singulier)"
+  },
+  "popup_sent_today_other": {
+    "message": "$1 posts sent today",
+    "description": "Compteur du jour (pluriel)"
+  },
+  "popup_sent_with_queue": {
+    "message": "$1 · $2 queued",
+    "description": "$1 = texte du compteur du jour, $2 = nombre de posts en file d'attente"
+  },
+  "popup_status_paused": {
+    "message": "Sending paused",
+    "description": "Titre du statut: envoi désactivé par l'utilisateur"
+  },
+  "popup_status_paused_desc": {
+    "message": "Fact-checks and badges are still shown.",
+    "description": "Description du statut en pause"
+  },
+  "popup_status_quota": {
+    "message": "Daily quota reached",
+    "description": "Titre du statut: quota atteint"
+  },
+  "popup_status_quota_desc": {
+    "message": "Resumes at $1",
+    "description": "$1 = heure locale de reprise"
+  },
+  "popup_status_quota_desc_unknown": {
+    "message": "Resumes tomorrow.",
+    "description": "Quota atteint sans heure de reprise connue"
+  },
+  "popup_status_offline": {
+    "message": "Seat 12A unreachable",
+    "description": "Titre du statut: service injoignable"
+  },
+  "popup_status_offline_desc": {
+    "message": "Next attempt at $1",
+    "description": "$1 = heure locale du prochain essai"
+  },
+  "popup_status_offline_desc_unknown": {
+    "message": "Retrying shortly.",
+    "description": "Hors ligne sans heure d'essai connue"
+  },
+  "popup_status_no_filters": {
+    "message": "No active filter",
+    "description": "Titre du statut: pas de filtre"
+  },
+  "popup_status_no_filters_desc": {
+    "message": "Nothing is sent until the team publishes filters.",
+    "description": "Description du statut sans filtre"
+  },
+  "popup_status_error": {
+    "message": "Status unavailable",
+    "description": "Titre quand l'extension ne répond pas"
+  },
+  "popup_status_error_desc": {
+    "message": "Could not read the extension state.",
+    "description": "Description quand l'extension ne répond pas"
+  },
+  "popup_send_observations": {
+    "message": "Send filtered posts",
+    "description": "Réglage: envoi des observations"
+  },
+  "popup_send_observations_help": {
+    "message": "Sends public posts matching the team's filters to the team.",
+    "description": "Aide du réglage d'envoi"
+  },
+  "popup_show_verdicts": {
+    "message": "Show fact-checks",
+    "description": "Réglage: afficher les verdicts"
+  },
+  "popup_show_verdicts_help": {
+    "message": "Shows validated fact-checks under the relevant posts.",
+    "description": "Aide du réglage des verdicts"
+  },
+  "popup_show_badges": {
+    "message": "Seat 12A badges",
+    "description": "Réglage: badges"
+  },
+  "popup_show_badges_help": {
+    "message": "Replaces X's checkmarks.",
+    "description": "Aide du réglage des badges"
+  },
+  "popup_language": {
+    "message": "Language",
+    "description": "Libellé du sélecteur de langue"
+  },
+  "popup_privacy": {
+    "message": "Privacy",
+    "description": "Lien vers la politique de confidentialité"
+  },
+  "popup_options": {
+    "message": "Options",
+    "description": "Lien vers la page d'options"
+  },
+  "popup_version": {
+    "message": "Version $1",
+    "description": "$1 = numéro de version de l'extension"
+  }
+}

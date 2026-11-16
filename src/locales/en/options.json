@@ -1,0 +1,398 @@
+{
+  "options_nav_label": {
+    "message": "Options sections",
+    "description": "Étiquette accessible de la navigation par onglets"
+  },
+  "options_tab_general": {
+    "message": "General",
+    "description": "Onglet Général"
+  },
+  "options_tab_privacy": {
+    "message": "Privacy",
+    "description": "Onglet Vie privée"
+  },
+  "options_tab_request": {
+    "message": "Request a badge",
+    "description": "Onglet de demande de badge"
+  },
+  "options_tab_report": {
+    "message": "Report a badge",
+    "description": "Onglet de signalement"
+  },
+  "options_tab_about": {
+    "message": "About",
+    "description": "Onglet À propos"
+  },
+  "options_general_title": {
+    "message": "General",
+    "description": "Titre de section"
+  },
+  "options_general_desc": {
+    "message": "Changes are saved immediately.",
+    "description": "Sous-titre de la section générale"
+  },
+  "options_language": {
+    "message": "Language",
+    "description": "Libellé du sélecteur de langue"
+  },
+  "options_language_help": {
+    "message": "Language of the extension and of what it shows on X.",
+    "description": "Aide du sélecteur de langue"
+  },
+  "options_theme": {
+    "message": "Theme",
+    "description": "Libellé du choix du thème"
+  },
+  "options_theme_system": {
+    "message": "System",
+    "description": "Thème suivant le système"
+  },
+  "options_theme_light": {
+    "message": "Light",
+    "description": "Thème clair"
+  },
+  "options_theme_dark": {
+    "message": "Dark",
+    "description": "Thème sombre"
+  },
+  "options_features": {
+    "message": "Features",
+    "description": "Titre du groupe de commutateurs"
+  },
+  "options_send_observations": {
+    "message": "Send filtered posts",
+    "description": "Réglage d'envoi"
+  },
+  "options_send_observations_help": {
+    "message": "Sends public posts matching the team's filters to the team. Fact-checks and badges keep working if you turn this off.",
+    "description": "Aide du réglage d'envoi"
+  },
+  "options_show_verdicts": {
+    "message": "Show fact-checks",
+    "description": "Réglage des verdicts"
+  },
+  "options_show_verdicts_help": {
+    "message": "Shows validated fact-checks under the relevant posts.",
+    "description": "Aide du réglage des verdicts"
+  },
+  "options_show_badges": {
+    "message": "Seat 12A badges",
+    "description": "Réglage des badges"
+  },
+  "options_show_badges_help": {
+    "message": "Replaces X's checkmarks with Seat 12A badges.",
+    "description": "Aide du réglage des badges"
+  },
+  "options_privacy_title": {
+    "message": "Privacy",
+    "description": "Titre de section"
+  },
+  "options_privacy_desc": {
+    "message": "Seat 12A only collects what fact-checking needs, nothing about you.",
+    "description": "Sous-titre vie privée"
+  },
+  "options_privacy_sent_title": {
+    "message": "What is sent",
+    "description": "Titre de liste"
+  },
+  "options_privacy_sent_1": {
+    "message": "The content of public posts matching the team's filters",
+    "description": "Élément envoyé"
+  },
+  "options_privacy_sent_2": {
+    "message": "The post id",
+    "description": "Élément envoyé"
+  },
+  "options_privacy_sent_3": {
+    "message": "The author's handle",
+    "description": "Élément envoyé"
+  },
+  "options_privacy_sent_4": {
+    "message": "Visible metrics (views, likes, reposts, replies)",
+    "description": "Élément envoyé"
+  },
+  "options_privacy_sent_5": {
+    "message": "A random installation token",
+    "description": "Élément envoyé"
+  },
+  "options_privacy_never_title": {
+    "message": "What is never sent",
+    "description": "Titre de liste"
+  },
+  "options_privacy_never_1": {
+    "message": "Your account and handle",
+    "description": "Élément jamais envoyé"
+  },
+  "options_privacy_never_2": {
+    "message": "Your browsing history",
+    "description": "Élément jamais envoyé"
+  },
+  "options_privacy_never_3": {
+    "message": "Your full feed",
+    "description": "Élément jamais envoyé"
+  },
+  "options_privacy_never_4": {
+    "message": "Your direct messages and notifications",
+    "description": "Élément jamais envoyé"
+  },
+  "options_privacy_never_5": {
+    "message": "Your IP address is not stored server-side",
+    "description": "Élément jamais envoyé"
+  },
+  "options_privacy_lookups_title": {
+    "message": "Lookups",
+    "description": "Titre de paragraphe"
+  },
+  "options_privacy_lookups_badges": {
+    "message": "To show badges, the extension asks Seat 12A for the numeric ids of the authors visible on screen (a public, cacheable request).",
+    "description": "Explication des consultations de badges"
+  },
+  "options_privacy_lookups_verdicts": {
+    "message": "For fact-checks, only filtered posts are concerned.",
+    "description": "Explication des consultations de verdicts"
+  },
+  "options_privacy_example_toggle": {
+    "message": "See an example of the data sent",
+    "description": "Bouton qui déplie l'exemple"
+  },
+  "options_privacy_example_hide": {
+    "message": "Hide the example",
+    "description": "Bouton qui replie l'exemple"
+  },
+  "options_privacy_example_label": {
+    "message": "Example of data sent for one post",
+    "description": "Étiquette accessible du bloc de code"
+  },
+  "options_privacy_example_text": {
+    "message": "Example text of a public post matching a filter.",
+    "description": "Texte fictif du post dans l'exemple JSON"
+  },
+  "options_token_title": {
+    "message": "Installation token",
+    "description": "Titre de section"
+  },
+  "options_token_desc": {
+    "message": "The token is random and does not identify you. The server only keeps a daily pseudonym, destroyed the next day.",
+    "description": "Explication du jeton"
+  },
+  "options_token_reset": {
+    "message": "Reset token",
+    "description": "Bouton de réinitialisation"
+  },
+  "options_token_confirm_title": {
+    "message": "Reset the token?",
+    "description": "Titre de la confirmation"
+  },
+  "options_token_confirm_desc": {
+    "message": "A new random token will be generated. This takes effect immediately and does not change your settings.",
+    "description": "Description de la confirmation"
+  },
+  "options_token_confirm": {
+    "message": "Reset",
+    "description": "Bouton de confirmation"
+  },
+  "options_token_cancel": {
+    "message": "Cancel",
+    "description": "Bouton d'annulation"
+  },
+  "options_token_success": {
+    "message": "The token has been reset.",
+    "description": "Message de succès"
+  },
+  "options_request_title": {
+    "message": "Request a badge",
+    "description": "Titre de section"
+  },
+  "options_request_desc": {
+    "message": "Every request is reviewed by the team. The same rules apply to every account.",
+    "description": "Sous-titre du formulaire"
+  },
+  "options_request_kind": {
+    "message": "Request type",
+    "description": "Légende du choix du type"
+  },
+  "options_request_kind_badge": {
+    "message": "Badge for an account",
+    "description": "Option de type"
+  },
+  "options_request_kind_affiliation": {
+    "message": "Affiliation to an organisation",
+    "description": "Option de type"
+  },
+  "options_account_id": {
+    "message": "Account numeric id",
+    "description": "Libellé du champ"
+  },
+  "options_account_id_help": {
+    "message": "The account's numeric id on X, not its handle.",
+    "description": "Aide du champ"
+  },
+  "options_category": {
+    "message": "Category",
+    "description": "Libellé du champ"
+  },
+  "options_org_id": {
+    "message": "Organisation numeric id",
+    "description": "Libellé du champ"
+  },
+  "options_org_title": {
+    "message": "Role in the organisation",
+    "description": "Libellé du champ"
+  },
+  "options_org_title_placeholder": {
+    "message": "Spokesperson",
+    "description": "Exemple de fonction"
+  },
+  "options_justification": {
+    "message": "Justification",
+    "description": "Libellé du champ"
+  },
+  "options_justification_help": {
+    "message": "Explain why this account should receive this badge (20 to 2,000 characters).",
+    "description": "Aide du champ"
+  },
+  "options_contact": {
+    "message": "Contact (optional)",
+    "description": "Libellé du champ"
+  },
+  "options_contact_help": {
+    "message": "Read only by the team.",
+    "description": "Aide du champ"
+  },
+  "options_evidence": {
+    "message": "Evidence",
+    "description": "Libellé du champ"
+  },
+  "options_evidence_help": {
+    "message": "One https:// link per line, 10 at most.",
+    "description": "Aide du champ"
+  },
+  "options_submit": {
+    "message": "Send request",
+    "description": "Bouton d'envoi"
+  },
+  "options_sending": {
+    "message": "Sending…",
+    "description": "Bouton pendant l'envoi"
+  },
+  "options_request_success": {
+    "message": "Request sent. Thank you, the team will review it.",
+    "description": "Succès du formulaire de demande"
+  },
+  "options_error_account": {
+    "message": "Enter a numeric id (digits only).",
+    "description": "Erreur de validation"
+  },
+  "options_error_org": {
+    "message": "Enter the organisation's numeric id.",
+    "description": "Erreur de validation"
+  },
+  "options_error_org_title": {
+    "message": "Enter the role (200 characters at most).",
+    "description": "Erreur de validation"
+  },
+  "options_error_justification": {
+    "message": "The justification must be between 20 and 2,000 characters.",
+    "description": "Erreur de validation"
+  },
+  "options_error_evidence_https": {
+    "message": "Every link must start with https://.",
+    "description": "Erreur de validation"
+  },
+  "options_error_evidence_count": {
+    "message": "10 links at most.",
+    "description": "Erreur de validation"
+  },
+  "options_error_comment": {
+    "message": "The comment cannot exceed 1,000 characters.",
+    "description": "Erreur de validation"
+  },
+  "options_error_contact": {
+    "message": "The contact cannot exceed 200 characters.",
+    "description": "Erreur de validation"
+  },
+  "options_error_title": {
+    "message": "Could not send",
+    "description": "Titre de l'alerte d'erreur"
+  },
+  "options_success_title": {
+    "message": "Sent",
+    "description": "Titre de l'alerte de succès"
+  },
+  "options_report_title": {
+    "message": "Report a badge",
+    "description": "Titre de section"
+  },
+  "options_report_desc": {
+    "message": "A badge looks wrong? Report it and the team will check.",
+    "description": "Sous-titre du formulaire"
+  },
+  "options_report_reason": {
+    "message": "Reason",
+    "description": "Légende du choix du motif"
+  },
+  "options_report_comment": {
+    "message": "Comment (optional)",
+    "description": "Libellé du champ"
+  },
+  "options_report_submit": {
+    "message": "Send report",
+    "description": "Bouton d'envoi"
+  },
+  "options_report_success": {
+    "message": "Report sent. Thank you.",
+    "description": "Succès du signalement"
+  },
+  "options_account_unknown": {
+    "message": "This account has no Seat 12A badge.",
+    "description": "Compte introuvable"
+  },
+  "options_account_loading": {
+    "message": "Looking up the account…",
+    "description": "Chargement du compte"
+  },
+  "options_account_card": {
+    "message": "Account's current badge",
+    "description": "Étiquette de la carte du compte"
+  },
+  "options_account_own_badge": {
+    "message": "Own badge",
+    "description": "Mention: le compte a son propre badge"
+  },
+  "options_account_org_badge": {
+    "message": "Through its organisation",
+    "description": "Mention: couleur héritée de l'organisation"
+  },
+  "options_about_title": {
+    "message": "About",
+    "description": "Titre de section"
+  },
+  "options_about_text": {
+    "message": "Seat 12A fact-checks and moderates the conversation on X. Every fact-check is validated by a human before it is shown. The same rule applies to every account, whatever its political side. The extension never posts anything on X.",
+    "description": "Paragraphe de présentation"
+  },
+  "options_about_version": {
+    "message": "Version $1",
+    "description": "$1 = numéro de version"
+  },
+  "options_about_site": {
+    "message": "Visit the Seat 12A website",
+    "description": "Lien vers le site"
+  },
+  "options_about_privacy": {
+    "message": "Privacy policy",
+    "description": "Lien vers la politique"
+  },
+  "options_badges_title": {
+    "message": "Badges",
+    "description": "Titre de la légende des badges"
+  },
+  "options_close": {
+    "message": "Close",
+    "description": "Libellé accessible du bouton de fermeture d'une boîte de dialogue"
+  },
+  "options_document_title": {
+    "message": "Seat 12A · Options",
+    "description": "Titre de l'onglet du navigateur"
+  }
+}

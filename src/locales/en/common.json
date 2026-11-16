@@ -1,0 +1,51 @@
+{
+  "extName": { "message": "Seat 12A", "description": "Extension name (manifest)" },
+  "extShortName": { "message": "Seat 12A", "description": "Short name" },
+  "extDescription": { "message": "Seat 12A fact-checks and badges, right inside X.", "description": "Manifest description" },
+  "generic_unknown": { "message": "Unknown", "description": "Generic label for an unknown value" },
+  "brand_tagline": { "message": "Fact-checking and moderation, from the window seat.", "description": "Brand tagline" },
+  "logo_alt": { "message": "Seat 12A logo", "description": "Logo alt text" },
+
+  "veracity_true": { "message": "True", "description": "Fact-check outcome" },
+  "veracity_mostly_true": { "message": "Mostly true", "description": "Fact-check outcome" },
+  "veracity_misleading": { "message": "Misleading", "description": "Fact-check outcome" },
+  "veracity_false": { "message": "False", "description": "Fact-check outcome" },
+  "veracity_unverifiable": { "message": "Unverifiable", "description": "Fact-check outcome" },
+  "veracity_unknown": { "message": "Checked", "description": "Unknown outcome (added server-side)" },
+
+  "context_need_none": { "message": "No context needed", "description": "Context need" },
+  "context_need_useful": { "message": "Context useful", "description": "Context need" },
+  "context_need_necessary": { "message": "Context needed", "description": "Context need" },
+  "context_need_unknown": { "message": "Context", "description": "Unknown context need" },
+
+  "badge_category_institutional": { "message": "Institution", "description": "Badge category" },
+  "badge_category_organization": { "message": "Organization", "description": "Badge category" },
+  "badge_category_media": { "message": "Media", "description": "Badge category" },
+  "badge_category_expert": { "message": "Expert", "description": "Badge category" },
+  "badge_category_personality": { "message": "Public figure", "description": "Badge category" },
+  "badge_category_unknown": { "message": "Verified account", "description": "Unknown badge category" },
+
+  "report_reason_wrong_category": { "message": "Wrong category", "description": "Report reason" },
+  "report_reason_not_eligible": { "message": "Not eligible", "description": "Report reason" },
+  "report_reason_impersonation": { "message": "Impersonation", "description": "Report reason" },
+  "report_reason_wrong_affiliation": { "message": "Wrong affiliation", "description": "Report reason" },
+  "report_reason_other": { "message": "Other", "description": "Report reason" },
+  "report_reason_unknown": { "message": "Other", "description": "Unknown reason" },
+
+  "language_fr": { "message": "Français", "description": "Language name (always in its own language)" },
+  "language_en": { "message": "English", "description": "Language name (always in its own language)" },
+  "language_auto": { "message": "Browser language", "description": "Automatic language option" },
+  "language_unknown": { "message": "Other language", "description": "Unknown language" },
+
+  "error_generic": { "message": "Something went wrong. Please try again later.", "description": "Generic error" },
+  "error_network": { "message": "Can't reach Seat 12A.", "description": "Network error" },
+  "error_TWR_BDG_019": { "message": "Too many submissions. Try again in a minute.", "description": "Per-IP form limit" },
+  "error_TWR_BDG_013": { "message": "An identical request is already pending.", "description": "Request already pending" },
+  "error_TWR_BDG_001": { "message": "This account shows no Seat 12A badge.", "description": "Account without badge" },
+  "error_TWR_BDG_003": { "message": "Invalid badge request.", "description": "Empty or oversized batch" },
+  "error_TWR_ING_002": { "message": "Daily quota reached. Resumes at midnight (UTC).", "description": "Send quota reached" },
+  "error_TWR_ING_006": { "message": "Invalid identifier.", "description": "Invalid ID" },
+  "error_TWR_ING_007": { "message": "Too many requests. Retrying automatically.", "description": "Per-IP ingestion limit" },
+  "error_TWR_ING_010": { "message": "Service temporarily unavailable.", "description": "Server outage" },
+  "error_TWR_GEN_001": { "message": "Invalid data.", "description": "Generic validation" }
+}

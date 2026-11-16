@@ -1,0 +1,48 @@
+# Builds the extension on every push / pull request and publishes dist/ as a
+# downloadable artifact ("seat12a-extension-<sha>"): unzip it, then load the folder
+# in chrome://extensions → Developer mode → "Load unpacked".
+#
+# Gate and site URLs come from repository variables (Settings → Secrets and variables
+# → Actions → Variables): VITE_GATE_URL, VITE_SITE_URL. Defaults: localhost / example.
+name: Build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+        env:
+          VITE_GATE_URL: ${{ vars.VITE_GATE_URL || 'http://localhost:8000' }}
+          VITE_SITE_URL: ${{ vars.VITE_SITE_URL || 'https://seat12a.example' }}
+
+      - name: Upload extension
+        uses: actions/upload-artifact@v4
+        with:
+          name: seat12a-extension-${{ github.sha }}
+          path: dist/
+          if-no-files-found: error
+          retention-days: 30
