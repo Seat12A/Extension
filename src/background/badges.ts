@@ -1,4 +1,4 @@
-import type { BadgeAccount, BadgeAccountDetail, BadgeCategoryInfo } from "~/shared/api-types";
+import type { BadgeAccount, BadgeAccountDetail, BadgeAffiliation, BadgeCategoryInfo } from "~/shared/api-types";
 import { ALARMS, LIMITS } from "~/shared/constants";
 import { gateFetch, validIds } from "./api";
 import { getLocal, setLocal, ttlGet, ttlGetMany, ttlSetMany } from "./store";
@@ -80,14 +80,65 @@ export async function ensureCategoriesAlarm(): Promise<void> {
 }
 
 // ---- account detail -------------------------------------------------------------
+type Obj = Record<string, unknown>;
+const isObj = (v: unknown): v is Obj => !!v && typeof v === "object" && !Array.isArray(v);
+const str = (v: unknown): string | undefined => (typeof v === "string" && v ? v : undefined);
+
+function normalizeAffiliation(a: unknown): BadgeAffiliation | null {
+  if (!isObj(a)) return null;
+  const org = isObj(a.org) ? a.org : isObj(a.organization) ? a.organization : {};
+  const label = str(org.label) ?? str(org.name) ?? str(a.org_label) ?? str(a.label);
+  if (!label) return null;
+  return {
+    org: { label, logo_url: str(org.logo_url) ?? str(a.logo_url) ?? null, platform: "x", external_id: str(org.external_id) ?? (isObj(org.account) ? str(org.account.external_id) : undefined) },
+    title: str(a.title) ?? null,
+    category: str(a.category) ?? str(org.category),
+    color: str(a.color) ?? str(org.color),
+  };
+}
+
+/**
+ * `GET /v1/badges/accounts/{platform}/{id}` as served by Tower:
+ *   { account: {platform, external_id}, badge: {category, color, label, logo_url, status, …} | null, affiliations: [...] }
+ * (no top-level category/color, unlike the lookup). Normalised to `BadgeAccountDetail`
+ * (displayed category/colour = own badge, else main affiliation), and the flat lookup-like
+ * shape is accepted too. Returns null when nothing can be displayed.
+ */
+export function normalizeAccountDetail(body: unknown, id: string): BadgeAccountDetail | null {
+  if (!isObj(body)) return null;
+  const rawBadge = isObj(body.badge) && (body.badge.status === undefined || body.badge.status === "active") ? body.badge : null;
+  const badge = rawBadge && str(rawBadge.category)
+    ? { category: str(rawBadge.category)!, color: str(rawBadge.color) ?? "", label: str(rawBadge.label) ?? null }
+    : null;
+  const affiliations = (Array.isArray(body.affiliations) ? body.affiliations : body.affiliation ? [body.affiliation] : [])
+    .map(normalizeAffiliation)
+    .filter((a): a is BadgeAffiliation => !!a);
+  const main = affiliations[0] ?? null;
+  const category = badge?.category ?? str(body.category) ?? main?.category;
+  if (!category) return null;
+  const color = badge?.color || str(body.color) || main?.color || "";
+  const account = isObj(body.account) ? body.account : {};
+  return {
+    platform: "x",
+    external_id: str(account.external_id) ?? str(body.external_id) ?? id,
+    category,
+    color,
+    badge,
+    affiliation: main,
+    affiliations,
+  };
+}
+
 export async function getAccountDetail(id: string): Promise<BadgeAccountDetail | null> {
   if (typeof id !== "string" || !/^\d{1,20}$/.test(id)) return null;
   const hit = await ttlGet<BadgeAccountDetail>("session", DETAIL_KEY, id, DETAIL_TTL);
   if (hit) return hit.v;
   const res = await gateFetch(`/v1/badges/accounts/x/${id}`);
-  if (res.status !== 200 || !res.body || typeof res.body !== "object") return null;
-  await ttlSetMany("session", DETAIL_KEY, { [id]: res.body as BadgeAccountDetail }, DETAIL_MAX);
-  return res.body as BadgeAccountDetail;
+  if (res.status !== 200) return null;
+  const detail = normalizeAccountDetail(res.body, id);
+  if (!detail) return null;
+  await ttlSetMany("session", DETAIL_KEY, { [id]: detail }, DETAIL_MAX);
+  return detail;
 }
 
 // ---- government hints -----------------------------------------------------------
