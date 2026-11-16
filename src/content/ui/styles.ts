@@ -36,7 +36,7 @@ export const VERDICT_CSS = `
 .note { margin: 8px 0 0; color: var(--text); overflow-wrap: anywhere; white-space: pre-wrap; }
 .sheet { margin: 6px 0 0; color: var(--text2); font-size: 13px; overflow-wrap: anywhere; white-space: pre-wrap; }
 .meta { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 12px; margin-top: 8px; color: var(--text2); font-size: 12px; }
-.meta span { display: inline-flex; align-items: center; gap: 4px; }
+.meta span, .meta a { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
 .links { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 0; padding: 0; list-style: none; }
 .link { display: inline-flex; align-items: center; gap: 4px; max-width: 100%; height: 26px; padding: 0 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); font-size: 12px; font-weight: 500; }
 .link:hover { text-decoration: none; background: var(--hover); }

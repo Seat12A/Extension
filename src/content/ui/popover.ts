@@ -81,12 +81,12 @@ export async function openPopover(anchor: HTMLElement, accountId: string, accoun
     head?.append(closeBtn);
     if (status) card.append(h("p", { class: "status", role: "status" }, status));
     card.append(footer());
-    place(card, anchor, "below", 300);
+    place(card, anchor, "below", 300, "start");
   };
 
   fill(body(account, accountId), t.t("content_popover_loading"));
   o.layer.append(card);
-  place(card, anchor, "below", 300);
+  place(card, anchor, "below", 300, "start");
 
   const onKey = (e: KeyboardEvent) => {
     if (e.key === "Escape") { e.stopPropagation(); closePopover(); return; }

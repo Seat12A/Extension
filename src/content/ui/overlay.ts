@@ -21,7 +21,7 @@ export function getOverlay(): Overlay {
 }
 
 /** Fixed-position placement near `anchor`, preferring above (`prefer`), flipping when short of room. */
-export function place(el: HTMLElement, anchor: Element, prefer: "above" | "below", width: number): void {
+export function place(el: HTMLElement, anchor: Element, prefer: "above" | "below", width: number, align: "center" | "start" = "center"): void {
   const r = anchor.getBoundingClientRect();
   const vw = document.documentElement.clientWidth || window.innerWidth;
   const vh = window.innerHeight;
@@ -31,7 +31,8 @@ export function place(el: HTMLElement, anchor: Element, prefer: "above" | "below
   if (above && r.top - height - gap < 0) above = false;
   if (!above && r.bottom + height + gap > vh && r.top - height - gap >= 0) above = true;
   const top = above ? r.top - height - gap : r.bottom + gap;
-  const left = Math.max(8, Math.min(r.left + r.width / 2 - width / 2, vw - width - 8));
+  const want = align === "start" ? r.left - 12 : r.left + r.width / 2 - width / 2;
+  const left = Math.max(8, Math.min(want, vw - width - 8));
   el.style.top = `${Math.max(8, top)}px`;
   el.style.left = `${left}px`;
 }
