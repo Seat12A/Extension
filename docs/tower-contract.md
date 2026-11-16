@@ -14,12 +14,12 @@ Toujours décider sur `error.code`, jamais sur `message` :
 
 | Endpoint | Auth | Module | Conduite |
 |---|---|---|---|
-| `GET /v1/ingest/config` | public | `background/config.ts` | Démarrage puis toutes les 15 min ; `If-None-Match` → `304` garde le cache ; échec → dernière config connue ; `version` nulle → rien n'est envoyé |
-| `POST /v1/ingest/observations` | `X-Installation-Token` | `background/queue.ts` | Voir [file d'envoi](#file-denvoi) |
+| `GET /v1/ingest/config` | public | `background/config.ts` | Démarrage puis toutes les 15 min ; `If-None-Match` → `304` garde le cache ; échec → dernière config connue ; `version` nulle (avec `filters: {}`, clés absentes = vides) → rien n'est envoyé |
+| `POST /v1/ingest/observations` | `X-Installation-Token` | `background/queue.ts` | Corps `{filter_version, items}` : version au niveau du lot (un lot = une version), items limités aux champs du schéma (champ inconnu = `422`). Voir [file d'envoi](#file-denvoi) |
 | `GET /v1/content/x/{id}/verdict?lang=` | public | `background/verdicts.ts` | `404 TWR-FCK-013` → rien à afficher (mis en cache) ; cache 5 min |
 | `GET /v1/badges/categories` | public | `background/badges.ts` | Démarrage puis toutes les 24 h |
 | `GET /v1/badges/lookup?platform=x&ids=…` | public | `background/badges.ts` | IDs numériques triés, 100 max, `ETag`/`304`, cache par ID 5 min (absents compris) |
-| `GET /v1/badges/accounts/x/{id}` | public | `background/badges.ts` | Détail au clic sur un badge ; `404 TWR-BDG-001` → rien |
+| `GET /v1/badges/accounts/x/{id}` | public | `background/badges.ts` | Détail au clic ; réponse `{account, badge, affiliations}` normalisée (badge propre, sinon affiliation `primary`) ; `404 TWR-BDG-001` → rien |
 | `POST /v1/badges/x-government-hints` | public, limité par IP | `background/badges.ts` | 50 IDs max, un même ID une fois par semaine |
 | `POST /v1/badges/requests`, `POST /v1/badges/reports` | public, limité par IP | `background/forms.ts` | `201` ; `TWR-BDG-019` → « réessayez dans une minute », pas de nouvel essai automatique |
 
@@ -79,6 +79,7 @@ Un post est envoyé s'il correspond à **un mot-clé** ou à **un compte** de
 | Réponse | Conduite |
 |---|---|
 | `202` | Items retirés de la file, refusés compris (jamais renvoyés) |
+| `401 TWR-ING-001` | Jeton mal formé : nouveau jeton généré, lot renvoyé une fois |
 | `429 TWR-ING-002` | Quota quotidien (500) : envois suspendus jusqu'à 00:00 UTC, file vidée |
 | `429 TWR-ING-007` | Limite par IP : 30 s, puis backoff exponentiel avec gigue (max 30 min) |
 | `422 TWR-ING-003`, `413 TWR-ING-004` | Bug client : lot coupé en deux et renvoyé |

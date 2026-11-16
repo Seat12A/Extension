@@ -9,14 +9,31 @@ interface StoredConfig extends IngestConfig { etag: string | null; fetchedAt: nu
 
 const isObj = (v: unknown): v is Record<string, unknown> => !!v && typeof v === "object" && !Array.isArray(v);
 
+/**
+ * Tower: `version` is a string or null; with no active version `filters` is `{}`.
+ * Every filter key may be absent and is then treated as empty. Anything malformed
+ * (wrong types) is rejected and the previous config is kept.
+ */
 function validate(body: unknown): IngestConfig | null {
-  if (!isObj(body) || !isObj(body.filters)) return null;
-  const { version, filters } = body as { version?: unknown; filters: Record<string, unknown> };
-  if (version !== null && typeof version !== "string") return null;
-  if (!Array.isArray(filters.keywords) || !filters.keywords.every((k) => typeof k === "string")) return null;
-  if (!Array.isArray(filters.accounts)) return null;
-  if (!isObj(filters.thresholds)) return null;
-  return { version, filters: filters as unknown as IngestConfig["filters"] };
+  if (!isObj(body)) return null;
+  const version = typeof body.version === "string" && body.version ? body.version : body.version == null ? null : undefined;
+  if (version === undefined) return null;
+  const f = body.filters == null ? {} : body.filters;
+  if (!isObj(f)) return null;
+  const keywords = f.keywords ?? [];
+  const accounts = f.accounts ?? [];
+  const thresholds = f.thresholds ?? {};
+  if (!Array.isArray(keywords) || !keywords.every((k) => typeof k === "string")) return null;
+  if (!Array.isArray(accounts) || !accounts.every((a) => isObj(a) && typeof a.external_id === "string")) return null;
+  if (!isObj(thresholds) || !Object.values(thresholds).every((n) => typeof n === "number")) return null;
+  return {
+    version,
+    filters: {
+      keywords: keywords as string[],
+      accounts: (accounts as Record<string, unknown>[]).map((a) => ({ platform: "x" as const, external_id: String(a.external_id) })),
+      thresholds: thresholds as Record<string, number>,
+    },
+  };
 }
 
 async function readStored(): Promise<StoredConfig | null> {

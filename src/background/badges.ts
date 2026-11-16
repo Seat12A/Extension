@@ -110,7 +110,11 @@ export function normalizeAccountDetail(body: unknown, id: string): BadgeAccountD
   const badge = rawBadge && str(rawBadge.category)
     ? { category: str(rawBadge.category)!, color: str(rawBadge.color) ?? "", label: str(rawBadge.label) ?? null }
     : null;
-  const affiliations = (Array.isArray(body.affiliations) ? body.affiliations : body.affiliation ? [body.affiliation] : [])
+  const rawAffs = (Array.isArray(body.affiliations) ? body.affiliations : body.affiliation ? [body.affiliation] : []) as unknown[];
+  // The main affiliation is the one flagged `primary: true` (Tower), whatever its position.
+  const affiliations = [...rawAffs]
+    .sort((x, y) => Number(isObj(y) && y.primary === true) - Number(isObj(x) && x.primary === true))
+    .filter((x) => !isObj(x) || !isObj(x.org) || x.org.status === undefined || x.org.status === "active")
     .map(normalizeAffiliation)
     .filter((a): a is BadgeAffiliation => !!a);
   const main = affiliations[0] ?? null;
@@ -130,7 +134,7 @@ export function normalizeAccountDetail(body: unknown, id: string): BadgeAccountD
 }
 
 export async function getAccountDetail(id: string): Promise<BadgeAccountDetail | null> {
-  if (typeof id !== "string" || !/^\d{1,20}$/.test(id)) return null;
+  if (typeof id !== "string" || !/^\d{1,19}$/.test(id)) return null;
   const hit = await ttlGet<BadgeAccountDetail>("session", DETAIL_KEY, id, DETAIL_TTL);
   if (hit) return hit.v;
   const res = await gateFetch(`/v1/badges/accounts/x/${id}`);

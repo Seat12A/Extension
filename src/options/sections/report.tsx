@@ -74,7 +74,7 @@ export function ReportSection({ initialAccount = "" }: { initialAccount?: string
       <SectionHeader title={t("options_report_title")} description={t("options_report_desc")} />
 
       <Field id={`${uid}-account`} label={t("options_account_id")} help={t("options_account_id_help")} error={errors.account}>
-        {(a) => <Input {...a} required inputMode="numeric" pattern="^\d{1,20}$" autoComplete="off" value={accountId} onChange={(e) => setAccountId(e.target.value)} />}
+        {(a) => <Input {...a} required inputMode="numeric" pattern="^\d{1,19}$" autoComplete="off" value={accountId} onChange={(e) => setAccountId(e.target.value)} />}
       </Field>
 
       {idValid ? <AccountCard id={accountId.trim()} /> : null}

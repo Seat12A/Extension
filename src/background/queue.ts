@@ -1,10 +1,10 @@
-import type { IngestResponse, ObservationItem } from "~/shared/api-types";
+import type { IngestItem, IngestRequest, IngestResponse, ObservationItem } from "~/shared/api-types";
 import { ALARMS, LIMITS } from "~/shared/constants";
 import { getSettings } from "~/shared/settings";
 import { errorCode, gateFetch } from "./api";
 import { readStoredConfig } from "./config";
 import { getLocal, getSession, setLocal, setSession } from "./store";
-import { getToken } from "./token";
+import { getToken, resetToken } from "./token";
 
 export interface SendState {
   backoffUntil: number;
@@ -18,7 +18,7 @@ const DEFAULT_STATE: SendState = { backoffUntil: 0, backoffAttempt: 0, quotaUnti
 
 export const BACKOFF_CAP_MS = 30 * 60_000;
 const MAX_SPLIT_DEPTH = 6;
-const ID_RE = /^\d{1,20}$/;
+const ID_RE = /^\d{1,19}$/;
 
 // ---- pure helpers ---------------------------------------------------------------
 export function nextUtcMidnight(now: Date): Date {
@@ -113,14 +113,27 @@ export function flush(): Promise<void> {
 
 type Outcome = "continue" | "stop";
 const enc = new TextEncoder();
-const EMPTY_BODY_BYTES = enc.encode(JSON.stringify({ items: [] })).length;
 
+/** Wire form of a queued item: `filter_version` moves to the batch, nothing else is sent. */
+export function toIngestItem(item: ObservationItem): IngestItem {
+  const { filter_version: _v, ...wire } = item as ObservationItem & { url?: unknown };
+  delete (wire as { url?: unknown }).url; // never sent (not part of Tower's schema)
+  return wire;
+}
+const bodyOf = (items: ObservationItem[]): IngestRequest => ({ filter_version: items[0]?.filter_version ?? null, items: items.map(toIngestItem) });
+
+/**
+ * Next batch: items sharing the oldest item's filter version (one version per request),
+ * ≤ 50 items and ≤ 256 KB of UTF-8 JSON.
+ */
 function takeBatch(queue: ObservationItem[]): { batch: ObservationItem[]; oversized?: ObservationItem } {
   const batch: ObservationItem[] = [];
-  let bytes = EMPTY_BODY_BYTES;
+  const version = queue[0]?.filter_version ?? null;
+  let bytes = enc.encode(JSON.stringify({ filter_version: version, items: [] })).length;
   for (const item of queue) {
     if (batch.length >= LIMITS.ingestMaxItems) break;
-    const size = enc.encode(JSON.stringify(item)).length + (batch.length ? 1 : 0);
+    if ((item.filter_version ?? null) !== version) continue;
+    const size = enc.encode(JSON.stringify(toIngestItem(item))).length + (batch.length ? 1 : 0);
     if (bytes + size > LIMITS.ingestMaxBytes) {
       if (batch.length === 0) return { batch, oversized: item };
       break;
@@ -165,7 +178,7 @@ async function sendBatch(items: ObservationItem[], token: string, depth: number)
   const res = await gateFetch("/v1/ingest/observations", {
     method: "POST",
     headers: { "Content-Type": "application/json", "X-Installation-Token": token },
-    body: { items },
+    body: bodyOf(items),
   });
   const code = errorCode(res.body);
 
@@ -185,6 +198,12 @@ async function sendBatch(items: ObservationItem[], token: string, depth: number)
       return next;
     });
     return exhausted ? "stop" : "continue";
+  }
+  if (res.status === 401 && code === "TWR-ING-001") {
+    // Malformed token (should never happen): regenerate once and retry, else drop the batch.
+    if (depth >= MAX_SPLIT_DEPTH) { await removeItems(items); return "continue"; }
+    const fresh = await resetToken();
+    return sendBatch(items, fresh, MAX_SPLIT_DEPTH);
   }
   if (res.status === 429 && code === "TWR-ING-002") {
     await updateState((s) => ({ ...s, quotaUntil: nextUtcMidnight(new Date()).toISOString() }));

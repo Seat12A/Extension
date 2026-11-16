@@ -101,7 +101,6 @@ export function createPipeline(initial: Settings): Pipeline {
     const item: ObservationItem = {
       platform: "x",
       external_id: p.externalId,
-      url: `https://x.com/${p.handle}/status/${p.externalId}`,
       author: authorId ? { handle: p.handle, external_id: authorId } : { handle: p.handle },
       text: p.text.slice(0, LIMITS.itemMaxTextChars),
       observed_at: new Date().toISOString(),

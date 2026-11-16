@@ -36,6 +36,6 @@ export function errorCode(body: unknown): string | null {
   return typeof code === "string" ? code : null;
 }
 
-export const VALID_ID = /^\d{1,20}$/;
+export const VALID_ID = /^\d{1,19}$/;
 export const validIds = (ids: unknown): string[] =>
   Array.isArray(ids) ? [...new Set(ids.filter((i): i is string => typeof i === "string" && VALID_ID.test(i)))] : [];
