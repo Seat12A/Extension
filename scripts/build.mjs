@@ -21,7 +21,7 @@ const dist = path.join(root, "dist");
 const watch = process.argv.includes("--watch");
 const mode = watch ? "development" : "production";
 const env = { ...loadEnv(mode, root, "VITE_"), ...Object.fromEntries(Object.entries(process.env).filter(([k]) => k.startsWith("VITE_"))) };
-const gateUrl = (env.VITE_GATE_URL || "http://localhost:8000").replace(/\/+$/, "");
+const gateUrl = (env.VITE_GATE_URL || "https://api.seat12a.org").replace(/\/+$/, "");
 const pkg = JSON.parse(await readFile(path.join(root, "package.json"), "utf8"));
 
 const shared = {
@@ -29,7 +29,7 @@ const shared = {
   mode,
   envDir: root,
   resolve: { alias: { "@": path.join(root, "src/ui"), "~": path.join(root, "src") } },
-  define: { "import.meta.env.VITE_GATE_URL": JSON.stringify(gateUrl), "import.meta.env.VITE_SITE_URL": JSON.stringify(env.VITE_SITE_URL || "https://seat12a.example") },
+  define: { "import.meta.env.VITE_GATE_URL": JSON.stringify(gateUrl), "import.meta.env.VITE_SITE_URL": JSON.stringify(env.VITE_SITE_URL || "https://seat12a.org") },
   logLevel: "warn",
 };
 const w = watch ? { watch: {} } : {};

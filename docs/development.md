@@ -46,7 +46,7 @@ uv run tower ingest publish-filters filters.json --version dev.1
 uv run tower gate
 ```
 
-Puis ici, avec `VITE_GATE_URL=http://localhost:8000` (valeur par défaut) :
+Puis ici, avec `VITE_GATE_URL=http://localhost:8000` dans `.env.local` (par défaut, le build vise la production `https://api.seat12a.org`) :
 
 ```bash
 npm run build
