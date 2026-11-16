@@ -3,7 +3,7 @@
 # in chrome://extensions → Developer mode → "Load unpacked".
 #
 # Gate and site URLs come from repository variables (Settings → Secrets and variables
-# → Actions → Variables): VITE_GATE_URL, VITE_SITE_URL. Defaults: localhost / example.
+# → Actions → Variables): VITE_GATE_URL, VITE_SITE_URL. Defaults: https://api.seat12a.org / https://seat12a.org.
 name: Build
 
 on:
@@ -36,8 +36,8 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          VITE_GATE_URL: ${{ vars.VITE_GATE_URL || 'http://localhost:8000' }}
-          VITE_SITE_URL: ${{ vars.VITE_SITE_URL || 'https://seat12a.example' }}
+          VITE_GATE_URL: ${{ vars.VITE_GATE_URL || 'https://api.seat12a.org' }}
+          VITE_SITE_URL: ${{ vars.VITE_SITE_URL || 'https://seat12a.org' }}
 
       - name: Upload extension
         uses: actions/upload-artifact@v4

@@ -37,10 +37,11 @@ d'afficher les vérifications partout sans révéler la navigation.
 caches de 5 min, lots de 100, regroupement de 300 ms, une requête par post au plus
 par période de cache.
 
-## 5. Nom et domaine
+## 5. Nom
 
-Nom public à fixer (actuellement « Seat 12A », clé `extName`). Domaine de production de
-gate et du site à fixer : `VITE_GATE_URL` et `VITE_SITE_URL` au build.
+Nom public à fixer (actuellement « Seat 12A », clé `extName`). Domaines fixés : gate
+`https://api.seat12a.org`, site `https://seat12a.org` (valeurs par défaut du build,
+modifiables par `VITE_GATE_URL` / `VITE_SITE_URL`).
 
 ## 6. Couleurs des badges
 

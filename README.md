@@ -24,7 +24,7 @@ npm run build
 ```
 
 Puis `chrome://extensions` → mode développeur → « Charger l'extension non empaquetée »
-→ `dist/`. Gate visé par défaut : `http://localhost:8000` (`VITE_GATE_URL`, voir
+→ `dist/`. Gate visé par défaut : `https://api.seat12a.org` (`VITE_GATE_URL`, voir
 `.env.example`).
 
 ```bash

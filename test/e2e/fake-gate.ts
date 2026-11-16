@@ -1,6 +1,6 @@
 /**
  * Minimal fake of Tower's gate for end-to-end tests. Listens on the origin the
- * extension was built for (default http://localhost:8000) and records every request.
+ * extension was built for (build with VITE_GATE_URL=http://localhost:8000) and records every request.
  */
 import http from "node:http";
 
