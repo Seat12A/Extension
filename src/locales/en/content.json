@@ -1,1 +1,98 @@
-{}
+{
+  "content_brand": {
+    "message": "Seat 12A",
+    "description": "Product name shown in widgets (not translated)."
+  },
+  "content_badge_label": {
+    "message": "Seat 12A badge: $1",
+    "description": "aria-label of a badge. $1 = category label."
+  },
+  "content_badge_label_affiliation": {
+    "message": "Seat 12A badge: $1 · $2",
+    "description": "aria-label of an affiliation badge. $1 = title, $2 = organisation."
+  },
+  "content_tip_affiliation": {
+    "message": "$1 · $2",
+    "description": "Tooltip line: $1 = title, $2 = organisation."
+  },
+  "content_org_logo_alt": {
+    "message": "Logo of $1",
+    "description": "Alt text of an organisation logo. $1 = organisation."
+  },
+  "content_popover_label": {
+    "message": "Seat 12A badge details",
+    "description": "Accessible name of the badge popover."
+  },
+  "content_popover_loading": {
+    "message": "Loading…",
+    "description": "Shown while badge details load."
+  },
+  "content_popover_error": {
+    "message": "Could not load the badge details.",
+    "description": "Error in the badge popover."
+  },
+  "content_popover_affiliations": {
+    "message": "Affiliations",
+    "description": "Heading of the affiliations list."
+  },
+  "content_popover_close": {
+    "message": "Close",
+    "description": "Close button label."
+  },
+  "content_action_request": {
+    "message": "Request a badge",
+    "description": "Pill button opening the badge request form."
+  },
+  "content_action_report": {
+    "message": "Report this badge",
+    "description": "Pill button opening the badge report form."
+  },
+  "content_verdict_label": {
+    "message": "Seat 12A fact-check: $1",
+    "description": "aria-label of the collapsed verdict row. $1 = veracity."
+  },
+  "content_claims_count_one": {
+    "message": "$1 claim",
+    "description": "Number of claims (singular)."
+  },
+  "content_claims_count_other": {
+    "message": "$1 claims",
+    "description": "Number of claims (plural)."
+  },
+  "content_claim_note_heading": {
+    "message": "Context note",
+    "description": "Heading above the note of a claim."
+  },
+  "content_machine_translated": {
+    "message": "Machine translated",
+    "description": "Shown when a note was machine translated."
+  },
+  "content_note_lang": {
+    "message": "Note in $1",
+    "description": "Language of a note differing from the UI. $1 = language name."
+  },
+  "content_inherited": {
+    "message": "Fact-check of identical content",
+    "description": "Shown when the verdict comes from another identical post."
+  },
+  "content_inherited_link": {
+    "message": "See the original",
+    "description": "Link to the original fact-checked content."
+  },
+  "content_validated_on": {
+    "message": "Checked on $1",
+    "description": "Validation date. $1 = formatted date."
+  },
+  "content_sources": {
+    "message": "Sources",
+    "description": "Heading of the links list."
+  },
+  "content_view_on_site": {
+    "message": "View on Seat 12A",
+    "description": "Footer link of a verdict."
+  },
+  "content_external_link": {
+    "message": "$1 (new tab)",
+    "description": "aria-label of an external link. $1 = host."
+  }
+}
