@@ -96,7 +96,7 @@
     "description": "Note traduite automatiquement ; $1 = langue d'origine, ex. « anglais »."
   },
   "content_reason_institutional": {
-    "message": "Ce compte est certifié car c'est celui d'un responsable politique ou d'une institution publique, gouvernementale ou internationale.",
+    "message": "Ce compte est certifié car il représente une institution ou un responsable politique.",
     "description": "Raison du badge, catégorie institution (responsables politiques, gouvernements, organisations internationales : ONU, UE…)"
   },
   "content_reason_organization": {
