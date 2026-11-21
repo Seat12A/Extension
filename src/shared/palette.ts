@@ -13,7 +13,7 @@ export interface BadgeColors { fill: string; stroke?: string }
 const BADGE: Record<string, { light: BadgeColors; dark: BadgeColors }> = {
   institutional: { light: { fill: "#F46600" }, dark: { fill: "#FF6A00" } },
   // One mid-tone per category for both themes: the white check needs ≥ 3:1 (WCAG 1.4.11).
-  organization: { light: { fill: "#0891B2" }, dark: { fill: "#0891B2" } }, // cyan
+  organization: { light: { fill: "#E30B5C" }, dark: { fill: "#E30B5C" } }, // raspberry
   media: { light: { fill: "#EA00FF" }, dark: { fill: "#EE33FF" } },
   expert: { light: { fill: "#16A34A" }, dark: { fill: "#16A34A" } }, // green
   personality: { light: { fill: "#335CFF" }, dark: { fill: "#6D8AFF" } },

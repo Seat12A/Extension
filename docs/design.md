@@ -50,7 +50,7 @@ une catégorie que le client ne connaît pas encore) :
 | Badge | Mode clair | Contraste sur blanc | Mode sombre | Contraste sur noir | Sur « Dim » |
 |---|---|---|---|---|---|
 | Institutionnel | `#F46600` | 3,1:1 | `#FF6A00` | 7,3:1 | 5,8:1 |
-| Organisation | `#0891B2` (cyan) | 3,7:1 | `#0891B2` | 5,7:1 | 4,5:1 |
+| Organisation | `#E30B5C` (framboise) | 4,7:1 | `#E30B5C` | 4,5:1 | 3,5:1 |
 | Média | `#EA00FF` | 3,6:1 | `#EE33FF` | 6,6:1 | 5,1:1 |
 | Expert | `#16A34A` (vert) | 3,3:1 | `#16A34A` | 6,4:1 | 5,0:1 |
 | Personnalité | `#335CFF` | 5,1:1 | `#6D8AFF` | 6,8:1 | 5,3:1 |
@@ -58,9 +58,8 @@ une catégorie que le client ne connaît pas encore) :
 Source unique : `src/shared/palette.ts`. « Contraste sur blanc » pour Organisation et
 Expert = contraste de la coche blanche sur le sceau (seuil WCAG 1.4.11 : 3:1). Teintes
 choisies pour rester bien séparées : orange (institutionnel), magenta (média), vert
-(expert), cyan (organisation), bleu (personnalité). Écartés : le jaune (coche blanche
-illisible, 1,6:1), le rouge (se lirait comme « faux »), le violet (trop proche du bleu
-et du magenta).
+(expert), framboise (organisation), bleu (personnalité). Écartés : le jaune (coche
+blanche illisible, 1,6:1), le cyan et le violet (trop proches du bleu).
 
 ### Badge à côté du nom
 
