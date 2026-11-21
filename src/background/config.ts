@@ -72,6 +72,13 @@ async function doRefresh(): Promise<void> {
   }
 }
 
+/** Refetch now, without If-None-Match (popup "reload"). */
+export async function forceRefreshConfig(): Promise<void> {
+  const stored = await readStored();
+  if (stored?.etag) await setLocal(KEY, { ...stored, etag: null });
+  await refreshConfig();
+}
+
 export async function getConfig(): Promise<IngestConfig | null> {
   const s = await readStored();
   if (!s) return null;

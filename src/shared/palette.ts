@@ -10,19 +10,25 @@ export type PageTheme = "light" | "dim" | "dark";
 
 export interface BadgeColors { fill: string; stroke?: string }
 
+// Ordered by Tower's rank. One mid-tone per category where the white check needs it (≥ 3:1, WCAG 1.4.11).
 const BADGE: Record<string, { light: BadgeColors; dark: BadgeColors }> = {
   institutional: { light: { fill: "#F46600" }, dark: { fill: "#FF6A00" } },
-  organization: { light: { fill: "#FFBF00", stroke: "#B98B00" }, dark: { fill: "#FFBF00" } },
   media: { light: { fill: "#EA00FF" }, dark: { fill: "#EE33FF" } },
-  expert: { light: { fill: "#00A0C0" }, dark: { fill: "#00D4FF" } },
-  personality: { light: { fill: "#335CFF" }, dark: { fill: "#6D8AFF" } },
+  expert: { light: { fill: "#16A34A" }, dark: { fill: "#16A34A" } }, // green
+  organization: { light: { fill: "#E30B5C" }, dark: { fill: "#E30B5C" } }, // raspberry
+  verified: { light: { fill: "#335CFF" }, dark: { fill: "#6D8AFF" } },
 };
+
+/** Tower renamed `personality` to `verified` (2026-11-21): accept the old value anywhere. */
+export function normalizeCategory<T extends string | null | undefined>(c: T): T | "verified" {
+  return c === "personality" ? "verified" : c;
+}
 
 export const KNOWN_BADGE_CATEGORIES = Object.keys(BADGE) as BadgeCategory[];
 
 /** Colour of the badge for `category` on a page in `theme`; `apiColor` for unknown categories. */
-export function badgeColors(category: BadgeCategory, theme: PageTheme, apiColor?: string): BadgeColors {
-  const known = BADGE[category];
+export function badgeColors(category: BadgeCategory, theme: PageTheme, apiColor?: string | null): BadgeColors {
+  const known = BADGE[normalizeCategory(category)];
   if (known) return theme === "light" ? known.light : known.dark;
   return { fill: apiColor && /^#[0-9a-f]{6}$/i.test(apiColor) ? apiColor : "#667b99" };
 }

@@ -3,6 +3,18 @@
     "message": "Open options",
     "description": "Libellé du bouton réglages (popup)"
   },
+  "popup_reload": {
+    "message": "Reload data",
+    "description": "Button that clears caches (badges, verdicts) and reloads from Seat 12A"
+  },
+  "popup_reload_done": {
+    "message": "Data reloaded",
+    "description": "Announced after a successful reload"
+  },
+  "popup_reload_error": {
+    "message": "Reload failed",
+    "description": "Announced when the reload failed"
+  },
   "popup_status_active": {
     "message": "Active",
     "description": "Titre du statut: envoi normal"

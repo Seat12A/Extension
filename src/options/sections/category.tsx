@@ -6,7 +6,7 @@ import { badgeColors, KNOWN_BADGE_CATEGORIES } from "~/shared/palette";
 import type { BadgeCategory, BadgeCategoryInfo } from "~/shared/api-types";
 
 /** Small coloured verified badge, in the category colour of the current theme. */
-export function CategoryBadge({ category, color, className = "size-[18px]" }: { category: BadgeCategory; color?: string; className?: string }) {
+export function CategoryBadge({ category, color, className = "size-[18px]" }: { category: BadgeCategory; color?: string | null; className?: string }) {
   const theme = useResolvedTheme();
   const { fill } = badgeColors(category, theme === "dark" ? "dark" : "light", color);
   return <Icons.verifiedFill className={className} style={{ color: fill }} />;

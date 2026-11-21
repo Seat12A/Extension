@@ -7,14 +7,6 @@
     "message": "Badge Seat 12A : $1",
     "description": "aria-label of a badge. $1 = category label."
   },
-  "content_badge_label_affiliation": {
-    "message": "Badge Seat 12A : $1 · $2",
-    "description": "aria-label of an affiliation badge. $1 = title, $2 = organisation."
-  },
-  "content_tip_affiliation": {
-    "message": "$1 · $2",
-    "description": "Tooltip line: $1 = title, $2 = organisation."
-  },
   "content_org_logo_alt": {
     "message": "Logo de $1",
     "description": "Alt text of an organisation logo. $1 = organisation."
@@ -98,5 +90,37 @@
   "content_translated_from": {
     "message": "Traduit automatiquement (original en $1)",
     "description": "Note traduite automatiquement ; $1 = langue d'origine, ex. « anglais »."
+  },
+  "content_reason_institutional": {
+    "message": "Ce compte est certifié car il représente une institution publique ou internationale, ou un élu.",
+    "description": "Raison du badge, catégorie institution (responsables politiques, gouvernements, organisations internationales : ONU, UE…)"
+  },
+  "content_reason_organization": {
+    "message": "Ce compte est certifié car il représente une organisation.",
+    "description": "Raison du badge, catégorie organisation"
+  },
+  "content_reason_media": {
+    "message": "Ce compte est certifié car il s'agit d'un média.",
+    "description": "Raison du badge, catégorie média"
+  },
+  "content_reason_expert": {
+    "message": "Ce compte est certifié car il s'agit d'un expert reconnu dans son domaine.",
+    "description": "Raison du badge, catégorie expert"
+  },
+  "content_reason_verified": {
+    "message": "Ce compte est certifié car son identité a été vérifiée.",
+    "description": "Raison du badge, catégorie vérifié"
+  },
+  "content_reason_unknown": {
+    "message": "Ce compte est certifié par Seat 12A.",
+    "description": "Raison du badge, catégorie inconnue"
+  },
+  "content_affiliated_with": {
+    "message": "Affilié à $1",
+    "description": "Nom accessible du logo d'organisation à côté du pseudo. $1 = organisation"
+  },
+  "content_affiliated_title": {
+    "message": "Affiliations",
+    "description": "Titre de l'infobulle et de la fiche d'un compte seulement affilié (pas de badge propre)"
   }
 }

@@ -94,8 +94,17 @@ Le worker ignore tout message dont `sender.id` n'est pas l'extension elle-même.
 | `verdictCache`, `badgeCache`, `lookupEtags`, `accountDetailCache` | session | Caches bornés, perdus à la fermeture du navigateur |
 | `authorIds` | session | Correspondance pseudo → ID numérique apprise dans le DOM (voir points ouverts) |
 
+| `cacheEpoch` | local | Horodatage du dernier « Recharger les données » (les onglets x.com l'écoutent) |
+
 Tout est **borné** (nombre d'entrées et durée) : une charge forte ralentit, elle ne
 déborde pas.
+
+Le bouton ⟳ de la popup (`src/background/cache.ts`) vide `verdictCache`, `badgeCache`,
+`lookupEtags`, `accountDetailCache`, `authorIds` et `badgeCategories`, recharge la
+config sans `If-None-Match`, contourne le cache HTTP du navigateur pendant 2 min
+(`cache: "reload"`), puis écrit `cacheEpoch` : chaque onglet x.com oublie alors ses
+réponses en mémoire et redessine. Il ne touche ni aux réglages, ni au jeton, ni à la
+file d'envoi, ni au quota, ni aux indices « government » déjà envoyés.
 
 ## Build
 

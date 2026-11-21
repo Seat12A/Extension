@@ -3,6 +3,18 @@
     "message": "Ouvrir les options",
     "description": "Libellé du bouton réglages (popup)"
   },
+  "popup_reload": {
+    "message": "Recharger les données",
+    "description": "Bouton qui vide les caches (badges, vérifications) et recharge depuis Seat 12A"
+  },
+  "popup_reload_done": {
+    "message": "Données rechargées",
+    "description": "Annonce après rechargement réussi"
+  },
+  "popup_reload_error": {
+    "message": "Échec du rechargement",
+    "description": "Annonce après échec du rechargement"
+  },
   "popup_status_active": {
     "message": "Actif",
     "description": "Titre du statut: envoi normal"

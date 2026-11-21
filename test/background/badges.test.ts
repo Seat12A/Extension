@@ -4,7 +4,12 @@ import { LIMITS } from "~/shared/constants";
 import { calls, err, headersOf, json, stubFetch } from "./helpers";
 
 afterEach(() => { vi.unstubAllGlobals(); vi.useRealTimers(); });
-const acc = { category: "media", color: "#fff", badge: null, affiliation: null };
+// Lookup shape of 2026-11-21: the check comes from `badge` only.
+const acc = {
+  category: "media", color: "#D946EF",
+  badge: { category: "media", color: "#D946EF", label: "Le Monde", expertise: null },
+  affiliation: null, affiliations: [],
+};
 
 describe("lookupBadges", () => {
   it("chunks sorted ids by 100 and caches absent ids as null", async () => {
@@ -65,6 +70,31 @@ describe("categories and detail", () => {
     expect(f).toHaveBeenCalledTimes(1);
     expect(await getAccountDetail("2")).toBeNull();
     expect(await getAccountDetail("zz")).toBeNull();
+  });
+});
+
+describe("lookup shape (2026-11-21)", () => {
+  it("affiliated-only accounts get no check, personality is read as verified, extra fields are kept", async () => {
+    const org = { platform: "x", external_id: "111", category: "media", color: "#D946EF", label: "Le Journal", logo_url: "https://cdn/l.png" };
+    stubFetch(() => json({ platform: "x", accounts: {
+      "1": { category: null, color: null, badge: null, affiliation: { org, title: "Reporter" },
+             affiliations: [{ org, title: "Reporter" }, { org: { ...org, external_id: "222", label: "Université X", logo_url: null, category: "organization" }, title: null }] },
+      "2": { category: "personality", color: "#3B5BFF", badge: { category: "personality", color: "#3B5BFF", label: "Dr A", expertise: null }, affiliation: null, affiliations: [] },
+      "3": { category: "expert", color: "#22D3EE", badge: { category: "expert", color: "#22D3EE", label: "Dr B", expertise: "épidémiologie" }, affiliation: null, affiliations: [] },
+      "4": { category: null, color: null, badge: null, affiliation: null, affiliations: [] },
+    } }));
+    const r = await lookupBadges(["1", "2", "3", "4"]);
+    expect(r["1"]).toEqual({
+      category: null, color: null, badge: null,
+      affiliation: { org: { ...org }, title: "Reporter" },
+      affiliations: [
+        { org: { ...org }, title: "Reporter" },
+        { org: { ...org, external_id: "222", label: "Université X", logo_url: null, category: "organization" }, title: null },
+      ],
+    });
+    expect(r["2"]).toMatchObject({ category: "verified", badge: { category: "verified" } });
+    expect(r["3"]!.badge!.expertise).toBe("épidémiologie");
+    expect(r["4"]).toBeNull();
   });
 });
 

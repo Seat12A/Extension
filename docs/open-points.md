@@ -9,10 +9,19 @@ Le lookup des badges, les indices « government » et `filters.accounts` exigent
 numérique X de l'auteur ; le DOM de X montre le pseudo.
 
 **Choix provisoire (couverture partielle)** : `src/content/author-ids.ts` apprend la
-correspondance pseudo → ID là où X l'affiche déjà, dans les boutons « Suivre »
-(`data-testid="<id>-follow"`) de l'en-tête de profil et des cellules de compte
-(suggestions, listes d'abonnés, cartes de survol). Rien n'est chargé ni appelé : seul
-ce qui est à l'écran est lu. La table vit dans `chrome.storage.session`.
+correspondance pseudo → ID là où X l'affiche déjà :
+
+- boutons « Suivre » (`data-testid="<id>-follow"`), où qu'ils soient (en-tête de profil,
+  post principal d'une page de post, cellules de compte, cartes de survol). Le pseudo
+  est lu dans le **libellé du même bouton** (`aria-label="Suivre @pseudo"`), jamais dans
+  l'URL : pendant une navigation profil A → profil B, X met à jour l'en-tête avant le
+  bouton, et l'ancienne règle associait le pseudo de B à l'ID de A ;
+- bloc JSON-LD `ProfilePage` des pages de profil (`additionalName` + `identifier`), qui
+  couvre aussi son propre profil et la navigation déconnectée.
+
+Rien n'est chargé ni appelé : seul ce qui est à l'écran est lu. La table vit dans
+`chrome.storage.session`, ouvert au content script par le service worker
+(`setAccessLevel`). Sans cet appel, la table était perdue à chaque rechargement.
 
 Conséquence : sur le fil, un auteur n'a de badge que si son ID a été vu au moins une
 fois pendant la session. **Solution visée** : une correspondance pseudo → ID servie
@@ -27,9 +36,10 @@ Implémentation provisoire : `min_views`, `min_likes`, `min_reposts`, `min_repli
 
 ## 3. Vérifications sur tous les posts
 
-Seuls les posts filtrés sont interrogés. Un endpoint d'index (liste compacte des posts
-vérifiés, ou recherche par préfixe de hachage, téléchargée périodiquement) permettrait
-d'afficher les vérifications partout sans révéler la navigation.
+**Réglé côté client (21/11/2026)** : index `GET /v1/verdict-index/x/{boîte}` (voir
+`tower-contract.md`). Tant que la route n'est pas déployée en production (elle renvoie
+`404 TWR-GEN-002` à cette date), l'extension garde l'ancien comportement : seuls les
+posts filtrés sont interrogés, et rien ne s'affiche sans version de filtres active.
 
 ## 4. Limitation de débit des lectures publiques
 

@@ -22,6 +22,9 @@ export const LIMITS = {
   tokenBytes: 32,
 } as const;
 
+/** storage.local key bumped by the popup "reload" button (content scripts listen). */
+export const CACHE_EPOCH_KEY = "cacheEpoch";
+
 export const ALARMS = {
   config: "seat12a:config",
   flush: "seat12a:flush",

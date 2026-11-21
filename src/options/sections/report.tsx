@@ -29,14 +29,23 @@ function AccountCard({ id }: { id: string }) {
   if (detail === undefined) return <Skeleton className="h-[62px] w-full rounded-lg" aria-label={t("options_account_loading")} />;
   if (detail === null) return <p className="text-[13px] text-muted-foreground" aria-live="polite">{t("options_account_unknown")}</p>;
   const aff = detail.affiliation;
-  const affText = aff ? [aff.title, aff.org.label].filter(Boolean).join(" · ") : "";
+  const affText = aff ? [aff.org.label, aff.title].filter(Boolean).join(" · ") : "";
+  const badge = detail.badge;
+  const logo = aff?.org.logo_url?.startsWith("https://") ? aff.org.logo_url : null;
+  // Badge and affiliation are independent: a check only for the account's own badge.
   return (
     <section aria-label={t("options_account_card")} className="flex items-center gap-3 rounded-lg border bg-card p-3">
-      <CategoryBadge category={detail.category} color={detail.color} className="size-6 shrink-0" />
+      {badge ? (
+        <CategoryBadge category={badge.category} color={badge.color} className="size-6 shrink-0" />
+      ) : logo ? (
+        <img src={logo} alt="" referrerPolicy="no-referrer" className="size-6 shrink-0 rounded-md border object-cover" />
+      ) : null}
       <div className="min-w-0">
-        <p className="text-[15px] leading-5 font-semibold text-foreground">{enumLabel("badge_category", detail.category)}</p>
+        <p className="text-[15px] leading-5 font-semibold text-foreground">
+          {badge ? [enumLabel("badge_category", badge.category), badge.expertise?.trim()].filter(Boolean).join(" · ") : t("options_account_org_badge")}
+        </p>
         <p className="truncate text-[13px] leading-[18px] text-muted-foreground">
-          {affText || (detail.badge ? t("options_account_own_badge") : t("options_account_org_badge"))}
+          {affText || t("options_account_own_badge")}
         </p>
       </div>
     </section>

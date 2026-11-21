@@ -40,7 +40,7 @@ export function startFakeGate(port = 8000, opts: FakeGateOptions = {}) {
       if (p === "/v1/badges/categories") return json(200, [
         { category: "institutional", color: "#FF7A00", rank: 1 }, { category: "media", color: "#D946EF", rank: 2 },
         { category: "expert", color: "#00A0C0", rank: 3 }, { category: "organization", color: "#FFBF00", rank: 4 },
-        { category: "personality", color: "#335CFF", rank: 5 },
+        { category: "verified", color: "#335CFF", rank: 5 },
       ]);
       if (p === "/v1/badges/lookup") {
         const ids = (url.searchParams.get("ids") ?? "").split(",");

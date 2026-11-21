@@ -360,7 +360,7 @@
     "description": "Mention: le compte a son propre badge"
   },
   "options_account_org_badge": {
-    "message": "Through its organisation",
+    "message": "Affiliated, no own badge",
     "description": "Mention: couleur héritée de l'organisation"
   },
   "options_about_title": {

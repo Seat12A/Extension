@@ -31,7 +31,8 @@ export type SubmitResult = { ok: true } | { ok: false; code: string };
 export type Request =
   | { type: "observe"; items: ObservationItem[] }
   | { type: "getConfig" }
-  | { type: "getVerdicts"; ids: string[]; lang: string }
+  /** `ids`: posts on screen; `filtered`: those passing the ingestion filters. */
+  | { type: "getVerdicts"; ids: string[]; lang: string; filtered?: string[] }
   | { type: "lookupBadges"; ids: string[] }
   | { type: "getBadgeCategories" }
   | { type: "getAccountDetail"; id: string }
@@ -40,6 +41,7 @@ export type Request =
   | { type: "submitBadgeReport"; body: BadgeReportBody }
   | { type: "getStatus" }
   | { type: "resetToken" }
+  | { type: "clearCaches" }
   | { type: "openOptions"; hash?: string };
 
 export interface ResponseMap {
@@ -56,6 +58,7 @@ export interface ResponseMap {
   submitBadgeReport: SubmitResult;
   getStatus: ExtensionStatus;
   resetToken: { ok: true };
+  clearCaches: { ok: true };
   openOptions: { ok: true };
 }
 

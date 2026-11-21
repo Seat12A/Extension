@@ -81,23 +81,44 @@ export interface PublicVerdict {
 }
 
 // ---- Badges -------------------------------------------------------------------
-export type BadgeCategory = "institutional" | "media" | "expert" | "organization" | "personality" | (string & {});
+/** `personality` was renamed `verified` by Tower (2026-11-21); the client maps the old value. */
+export type BadgeCategory = "institutional" | "media" | "expert" | "organization" | "verified" | (string & {});
 export interface BadgeCategoryInfo { category: BadgeCategory; color: string; rank: number }
-export interface BadgeOwn { category: BadgeCategory; color: string; label?: string | null }
-export interface BadgeOrg { platform?: Platform; external_id?: string; label: string; logo_url?: string | null }
-export interface BadgeAffiliation { org: BadgeOrg; title?: string | null; category?: BadgeCategory; color?: string }
-export interface BadgeAccount {
-  /** What to display: own badge, else the org colour of the main affiliation. */
+export interface BadgeOwn {
   category: BadgeCategory;
   color: string;
+  label?: string | null;
+  /** Field of an `expert` badge, free French text (≤ 120), else null. Plain text only. */
+  expertise?: string | null;
+}
+export interface BadgeOrg {
+  platform?: Platform;
+  external_id?: string;
+  label: string;
+  logo_url?: string | null;
+  /** The ORGANISATION's own badge: for details only, never the colour of an affiliate's check. */
+  category?: BadgeCategory | null;
+  color?: string | null;
+}
+export interface BadgeAffiliation { org: BadgeOrg; title?: string | null }
+/**
+ * One account of `GET /v1/badges/lookup`. Badge and affiliation are INDEPENDENT:
+ *  - the check comes only from the account's own `badge` (`category`/`color` mirror it, null otherwise);
+ *  - an affiliation shows the organisation's logo next to the name, never a check.
+ */
+export interface BadgeAccount {
+  category: BadgeCategory | null;
+  color: string | null;
   badge: BadgeOwn | null;
+  /** Main affiliation (chosen by the Seat 12A team): its logo goes next to the name. */
   affiliation: BadgeAffiliation | null;
+  /** Every active affiliation, main one first, ≤ 5. */
+  affiliations: BadgeAffiliation[];
 }
 export interface BadgeLookupResponse { accounts: Record<string, BadgeAccount> }
 export interface BadgeAccountDetail extends BadgeAccount {
   platform: Platform;
   external_id: string;
-  affiliations?: BadgeAffiliation[];
 }
 
 export type BadgeReportReason = "wrong_category" | "not_eligible" | "impersonation" | "wrong_affiliation" | "other";

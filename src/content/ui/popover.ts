@@ -1,10 +1,11 @@
 import type { BadgeAccount, BadgeAccountDetail, BadgeAffiliation } from "~/shared/api-types";
 import { send } from "~/shared/messages";
 import { badgeColors } from "~/shared/palette";
-import { h, safeHttps } from "./dom";
+import { h } from "./dom";
 import { brandMark, icon, sealIcon } from "./icons";
 import { getOverlay, place } from "./overlay";
 import { ui } from "./state";
+import { badgeReason, badgeTitle, logoImg } from "./tooltip";
 
 interface Open { card: HTMLElement; anchor: HTMLElement; cleanup: () => void }
 let current: Open | null = null;
@@ -28,17 +29,12 @@ export function closePopover(restoreFocus = true): void {
   if (restoreFocus && anchor.isConnected) anchor.focus({ preventScroll: true });
 }
 
-function logoOf(a: BadgeAffiliation): HTMLElement | null {
-  const src = safeHttps(a.org.logo_url);
-  return src ? h("img", { class: "logo", src, alt: ui.t.t("content_org_logo_alt", a.org.label), referrerpolicy: "no-referrer", width: 20, height: 20 }) : null;
-}
-
 function affiliationRow(a: BadgeAffiliation): HTMLElement {
   const title = a.title?.trim();
   return h(
     "li",
     { class: "aff" },
-    logoOf(a),
+    logoImg(a, "logo", 24),
     h("div", { class: "aff-t" }, h("span", {}, a.org.label), title ? h("small", {}, title) : null),
   );
 }
@@ -53,27 +49,34 @@ function iconButton(name: "addModerator" | "flag", label: string, onclick: () =>
   return h("button", { class: "ib", type: "button", "aria-label": label, title: label, onclick }, icon(name, 18));
 }
 
-/** Badge popover: identity first (seal + category + label), affiliations, then a quiet footer. */
+/**
+ * Badge popover. Own badge first ("Category · field" + why it is verified), then
+ * the affiliations (organisation logos, never a check). The account's name is not repeated.
+ */
 function body(detail: BadgeAccount | BadgeAccountDetail): Node[] {
   const { t } = ui;
-  const category = t.enumLabel("badge_category", detail.category);
-  const colors = badgeColors(detail.category, ui.theme, detail.color);
-  const affs = ("affiliations" in detail && detail.affiliations?.length ? detail.affiliations : detail.affiliation ? [detail.affiliation] : []);
-  const main = detail.affiliation;
-  const label = detail.badge?.label?.trim()
-    || (main ? (main.title?.trim() ? t.t("content_tip_affiliation", main.title.trim(), main.org.label) : main.org.label) : "");
-  const out: Node[] = [
-    h(
+  const out: Node[] = [];
+  if (detail.badge) {
+    // Small seal inline before the title (no large one: the badge is already next to the name).
+    const colors = badgeColors(detail.badge.category, ui.theme, detail.badge.color);
+    out.push(h(
       "div",
       { class: "card-head" },
-      sealIcon(28, colors.fill, colors.stroke),
-      h("div", { class: "card-id" }, h("div", { class: "card-title" }, category), label ? h("div", { class: "card-sub" }, label) : null),
-    ),
-  ];
-  if (affs.length) {
-    out.push(
-      h("div", { class: "sect" }, h("div", { class: "h" }, t.t("content_popover_affiliations")), h("ul", { class: "affs" }, ...affs.map(affiliationRow))),
-    );
+      h(
+        "div",
+        { class: "card-id" },
+        h("div", { class: "card-title" }, sealIcon(16, colors.fill, colors.stroke), h("span", {}, badgeTitle(detail) ?? "")),
+        h("div", { class: "card-sub" }, badgeReason(detail) ?? ""),
+      ),
+    ));
+  }
+  if (detail.affiliations.length) {
+    out.push(h(
+      "div",
+      { class: detail.badge ? "sect" : "sect first" },
+      h("div", { class: "h" }, t.t(detail.badge ? "content_popover_affiliations" : "content_affiliated_title")),
+      h("ul", { class: "affs" }, ...detail.affiliations.map(affiliationRow)),
+    ));
   }
   return out;
 }

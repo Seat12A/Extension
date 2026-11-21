@@ -32,10 +32,29 @@ function useStatus() {
   return { status, failed };
 }
 
+type ReloadState = "idle" | "busy" | "done" | "error";
+
+/** Clears every cache (worker + open x.com tabs) so fresh badges and verdicts show at once. */
+function useReload() {
+  const [state, setState] = useState<ReloadState>("idle");
+  const run = useCallback(async () => {
+    setState("busy");
+    try {
+      await send({ type: "clearCaches" });
+      setState("done");
+    } catch {
+      setState("error");
+    }
+    setTimeout(() => setState("idle"), 2000);
+  }, []);
+  return { state, run };
+}
+
 export function App() {
   const { t } = useT();
   const [settings, update] = useSettings();
   const { status, failed } = useStatus();
+  const reload = useReload();
   const openOptions = useCallback(() => { void chrome.runtime.openOptionsPage(); }, []);
   const version = chrome.runtime.getManifest?.().version ?? "";
 
@@ -46,9 +65,29 @@ export function App() {
           <LogoMark className="h-7" />
           <Wordmark className="h-[18px] w-auto" />
         </div>
-        <Button variant="ghost" size="icon" onClick={openOptions} aria-label={t("popup_open_options")} title={t("popup_open_options")}>
-          <Icons.settings className="size-5 text-muted-foreground" />
-        </Button>
+        <div className="flex items-center gap-1">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => void reload.run()}
+            disabled={reload.state === "busy"}
+            aria-label={t("popup_reload")}
+            title={t("popup_reload")}
+            data-testid="reload"
+          >
+            {reload.state === "done" ? (
+              <Icons.check className="size-5 text-muted-foreground" />
+            ) : (
+              <Icons.refresh className={`size-5 text-muted-foreground${reload.state === "busy" ? " animate-spin" : ""}`} />
+            )}
+          </Button>
+          <Button variant="ghost" size="icon" onClick={openOptions} aria-label={t("popup_open_options")} title={t("popup_open_options")}>
+            <Icons.settings className="size-5 text-muted-foreground" />
+          </Button>
+          <span className="sr-only" role="status" aria-live="polite">
+            {reload.state === "done" ? t("popup_reload_done") : reload.state === "error" ? t("popup_reload_error") : ""}
+          </span>
+        </div>
       </header>
 
       <StatusCard status={status} failed={failed} />

@@ -16,7 +16,7 @@ export function RequestSection({ initialAccount = "" }: { initialAccount?: strin
   const cats = useBadgeCategories();
   const uid = useId();
   const [values, setValues] = useState<RequestValues>({
-    kind: "badge", accountId: initialAccount, category: "personality", orgId: "", orgTitle: "", justification: "", contact: "", evidence: "",
+    kind: "badge", accountId: initialAccount, category: "verified", orgId: "", orgTitle: "", justification: "", contact: "", evidence: "",
   });
   const [errors, setErrors] = useState<RequestErrors>({});
   const [attempted, setAttempted] = useState(false);
