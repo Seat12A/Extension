@@ -85,7 +85,7 @@ export const OVERLAY_CSS = `
 .tip .affs-tip { display: grid; gap: 4px; margin-top: 6px; }
 .tip .affs-tip .l2 { align-items: center; margin-top: 0; }
 .tip .initial, .aff .initial { display: inline-flex; align-items: center; justify-content: center; color: var(--text2); font-weight: 700; font-size: 10px; line-height: 1; box-shadow: 0 0 0 1px var(--line); }
-.aff .initial { font-size: 12px; }
+.aff .initial { font-size: 14px; }
 .tip img, .logo { width: 16px; height: 16px; border-radius: 4px; object-fit: cover; flex: none; background: var(--muted); }
 .card { position: fixed; width: 280px; max-width: calc(100vw - 16px); padding: 16px 16px 0; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); color: var(--text); box-shadow: 0 8px 28px rgba(0,0,0,.16); outline: none; }
 :host([data-theme="dim"]) .card, :host([data-theme="dark"]) .card { box-shadow: 0 0 0 1px rgba(255,255,255,.02), 0 8px 28px rgba(0,0,0,.5); }
@@ -97,19 +97,20 @@ export const OVERLAY_CSS = `
 .card-id { min-width: 0; }
 .card-title { display: flex; align-items: center; gap: 6px; font-size: 16px; font-weight: 700; letter-spacing: -.01em; line-height: 1.25; }
 .card-title > svg { flex: none; }
-.card-sub { margin-top: 2px; color: var(--text2); font-size: 13px; line-height: 1.35; overflow-wrap: anywhere; }
+.card-sub { margin-top: 4px; color: var(--text2); font-size: 13px; line-height: 1.35; overflow-wrap: anywhere; }
 .status { margin: 12px 0 0; color: var(--text2); font-size: 12px; }
-.sect { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
+/* Affiliations: a plain list under a thin rule, logo as tall as the two text lines. */
+.sect { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); }
 .sect.first { margin-top: 0; padding-top: 0; border-top: 0; }
-.h { margin: 0 0 8px; color: var(--text2); font-size: 12px; font-weight: 600; }
-.affs { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.h { margin: 0 0 10px; color: var(--text2); font-size: 12px; font-weight: 600; line-height: 16px; }
+.affs { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; }
 .aff { display: flex; align-items: center; gap: 10px; }
-.aff .logo { width: 24px; height: 24px; border-radius: 6px; }
-.aff-t { min-width: 0; overflow-wrap: anywhere; font-size: 14px; font-weight: 500; line-height: 1.3; }
-.aff-t small { display: block; color: var(--text2); font-size: 12px; font-weight: 400; }
-.card-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 14px; padding: 8px 0 10px; border-top: 1px solid var(--line); }
-/* No affiliations: nothing to separate the footer from. */
-.card-head + .card-foot, .card-head + .status + .card-foot { border-top: 0; margin-top: 6px; padding-top: 4px; }
+.aff .logo { width: 32px; height: 32px; border-radius: 8px; background: var(--muted); box-shadow: 0 0 0 1px var(--line); }
+.aff-t { display: grid; gap: 1px; min-width: 0; overflow-wrap: anywhere; }
+.aff-t span { color: var(--text); font-size: 14px; font-weight: 600; line-height: 18px; }
+.aff-t small { color: var(--text2); font-size: 13px; font-weight: 400; line-height: 16px; }
+.card-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 6px; padding: 0 0 8px; min-height: 40px; }
+.sect + .card-foot, .sect + .status + .card-foot { margin-top: 10px; }
 .by { display: inline-flex; align-items: center; gap: 6px; color: var(--text2); font-size: 12px; }
 .by strong { color: var(--text); font-weight: 600; }
 .acts { display: inline-flex; gap: 2px; margin-inline-end: -6px; }
