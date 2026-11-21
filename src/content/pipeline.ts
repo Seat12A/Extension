@@ -36,6 +36,8 @@ export interface Pipeline {
   stop(): void;
   /** Settings changed: drop every widget and re-evaluate what is on screen. */
   applySettings(s: Settings): void;
+  /** Caches cleared from the popup: forget every server answer, redraw from scratch. */
+  reset(): void;
 }
 
 function hasBadge(container: Element): boolean {
@@ -472,6 +474,16 @@ export function createPipeline(initial: Settings): Pipeline {
       flushHints();
       for (const t of [verdictTimer, badgeTimer]) if (t) clearTimeout(t);
       verdictTimer = badgeTimer = undefined;
+    },
+    reset() {
+      badgeMemo.clear();
+      badgeRequested.clear();
+      badgeQueue = [];
+      if (badgeTimer) { clearTimeout(badgeTimer); badgeTimer = undefined; }
+      if (verdictTimer) { clearTimeout(verdictTimer); verdictTimer = undefined; }
+      verdictQueue = [];
+      void refreshConfig();
+      this.applySettings(settings);
     },
     applySettings(s) {
       settings = s;

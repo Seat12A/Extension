@@ -1,5 +1,6 @@
 import type { Request, ResponseMap } from "~/shared/messages";
 import { getAccountDetail, getBadgeCategories, lookupBadges, sendGovernmentHints } from "./badges";
+import { clearCaches } from "./cache";
 import { getConfig } from "./config";
 import { submitBadgeReport, submitBadgeRequest } from "./forms";
 import { enqueue } from "./queue";
@@ -23,6 +24,7 @@ export async function handle(msg: Request): Promise<ResponseMap[Request["type"]]
     case "submitBadgeReport": return submitBadgeReport(msg.body);
     case "getStatus": return getStatus();
     case "resetToken": await resetToken(); return { ok: true };
+    case "clearCaches": return clearCaches();
     case "openOptions": {
       const hash = typeof msg.hash === "string" && msg.hash && HASH_RE.test(msg.hash) ? "#" + msg.hash : "";
       await chrome.tabs.create({ url: chrome.runtime.getURL("options.html" + hash) });

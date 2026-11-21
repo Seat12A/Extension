@@ -40,6 +40,7 @@ export type Request =
   | { type: "submitBadgeReport"; body: BadgeReportBody }
   | { type: "getStatus" }
   | { type: "resetToken" }
+  | { type: "clearCaches" }
   | { type: "openOptions"; hash?: string };
 
 export interface ResponseMap {
@@ -56,6 +57,7 @@ export interface ResponseMap {
   submitBadgeReport: SubmitResult;
   getStatus: ExtensionStatus;
   resetToken: { ok: true };
+  clearCaches: { ok: true };
   openOptions: { ok: true };
 }
 

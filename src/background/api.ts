@@ -9,6 +9,10 @@ export interface GateResponse {
   body: any;
 }
 
+let bypassUntil = 0;
+/** Next requests skip the browser HTTP cache (used right after the user asked a reload). */
+export function bypassHttpCache(ms: number): void { bypassUntil = Date.now() + ms; }
+
 export interface GateInit { method?: string; headers?: Record<string, string>; body?: unknown }
 
 export async function gateFetch(path: string, init: GateInit = {}): Promise<GateResponse> {
@@ -20,6 +24,7 @@ export async function gateFetch(path: string, init: GateInit = {}): Promise<Gate
       headers,
       body: init.body !== undefined ? JSON.stringify(init.body) : undefined,
       credentials: "omit",
+      cache: Date.now() < bypassUntil ? "reload" : "default",
       signal: AbortSignal.timeout(15000),
     });
     let body: unknown = null;

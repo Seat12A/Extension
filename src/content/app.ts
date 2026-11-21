@@ -1,6 +1,7 @@
 import { createTranslator, resolveLang } from "~/shared/i18n";
 import { getSettings, onSettingsChanged, type Settings } from "~/shared/settings";
-import { loadAuthorIds } from "./author-ids";
+import { CACHE_EPOCH_KEY } from "~/shared/constants";
+import { loadAuthorIds, resetAuthorIds } from "./author-ids";
 import { createPipeline, type Pipeline } from "./pipeline";
 import { BADGES_CLASS } from "./selectors";
 import { detectTheme, watchTheme } from "./theme";
@@ -40,6 +41,14 @@ export async function startApp(): Promise<App | null> {
     const pipeline = createPipeline(settings);
     const stopTheme = watchTheme((t) => setTheme(t));
     const stopGuard = guardBadgesClass();
+    const onStorage = (changes: Record<string, chrome.storage.StorageChange>, area: string) => {
+      if (area !== "local" || !changes[CACHE_EPOCH_KEY]) return;
+      try {
+        resetAuthorIds();
+        pipeline.reset();
+      } catch { /* ignore */ }
+    };
+    chrome.storage.onChanged.addListener(onStorage);
     const stopSettings = onSettingsChanged((s) => {
       try {
         applyLocal(s);
@@ -54,6 +63,7 @@ export async function startApp(): Promise<App | null> {
         stopTheme();
         stopSettings();
         stopGuard();
+        chrome.storage.onChanged.removeListener(onStorage);
         document.documentElement.classList.remove(BADGES_CLASS);
       },
     };

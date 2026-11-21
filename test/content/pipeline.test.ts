@@ -247,6 +247,24 @@ describe("pipeline", () => {
     expect(art.querySelector("seat12a-verdict")).toBeNull();
   });
 
+  it("redraws from fresh server answers after the popup reload", async () => {
+    load("timeline.html", "user-cell.html");
+    document.querySelectorAll('[data-testid$="-follow"]')[0]!.setAttribute("data-testid", "555-follow");
+    let has = false;
+    chromeMock.messageHandler = (msg) => {
+      sent.push(JSON.parse(JSON.stringify(msg)));
+      if (msg.type === "getConfig") return config;
+      if (msg.type === "lookupBadges") return Object.fromEntries(msg.ids.map((id: string) => [id, has && id === "555" ? expert : null]));
+      return undefined;
+    };
+    await boot();
+    expect(document.querySelector('[data-testid="UserCell"] seat12a-badge')).toBeNull();
+    has = true; // badge validated in Tower meanwhile
+    await chromeMock.storage.local.set({ cacheEpoch: Date.now() });
+    await flush(1500);
+    expect(document.querySelector('[data-testid="UserCell"] seat12a-badge')).toBeTruthy();
+  });
+
   it("makes no network call at all", async () => {
     load("timeline.html");
     await boot();
