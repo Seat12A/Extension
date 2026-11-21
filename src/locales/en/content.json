@@ -96,7 +96,7 @@
     "description": "Machine-translated note; $1 = original language, e.g. “French”."
   },
   "content_reason_institutional": {
-    "message": "This account is verified because it represents a public or international institution.",
+    "message": "This account is verified because it represents a public or international institution, or an elected official.",
     "description": "Badge reason, institution category (political leaders, governments, international bodies: UN, EU…)"
   },
   "content_reason_organization": {
