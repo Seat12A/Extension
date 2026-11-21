@@ -9,7 +9,10 @@ import { bypassHttpCache } from "./api";
 import { refreshCategories } from "./badges";
 import { forceRefreshConfig } from "./config";
 
-const SESSION_KEYS = ["verdictCache", "badgeCache", "lookupEtags", "accountDetailCache", "authorIds"];
+const SESSION_KEYS = [
+  "verdictCache", "badgeCache2", "lookupEtags2", "accountDetailCache2", "authorIds",
+  "badgeCache", "lookupEtags", "accountDetailCache", // pre-2026-11-21 keys
+];
 const LOCAL_KEYS = ["badgeCategories"];
 /** Browser HTTP cache (Tower sends max-age=300) bypassed for this long after a reload. */
 const BYPASS_MS = 2 * 60_000;

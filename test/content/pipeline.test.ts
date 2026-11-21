@@ -13,7 +13,7 @@ const verdict = (id: string): PublicVerdict => ({
   platform: "x", external_id: id, url: "https://seat12a.example/cases/1", lang: "fr",
   claims: [{ text: "Les impôts baissent de 10 %", lang: "fr", veracity: "false", context_need: "necessary", context_types: [], validated_at: "2026-11-10T10:00:00Z", note: { lang: "fr", text: "Faux : la baisse est de 1 %.", machine_translated: false, links: ["https://example.org/a", "http://insecure.example/b"] }, inherited: null }],
 });
-const expert: BadgeAccount = { category: "expert", color: "#00A0C0", badge: { category: "expert", color: "#00A0C0", label: "Épidémiologiste" }, affiliation: null };
+const expert: BadgeAccount = { category: "expert", color: "#16A34A", badge: { category: "expert", color: "#16A34A", label: "Épidémiologiste" }, affiliation: null, affiliations: [] };
 
 let sent: any[] = [];
 let app: App | null = null;
@@ -175,7 +175,7 @@ describe("pipeline", () => {
   });
 
   it("profile A → profile B with a reused header: never keeps A's badge on B", async () => {
-    const org: BadgeAccount = { category: "organization", color: "#FFD60A", badge: { category: "organization", color: "#FFD60A", label: "Seat 12A" }, affiliation: null };
+    const org: BadgeAccount = { category: "organization", color: "#FFD60A", badge: { category: "organization", color: "#FFD60A", label: "Seat 12A" }, affiliation: null, affiliations: [] };
     chromeMock.messageHandler = (msg) => {
       sent.push(JSON.parse(JSON.stringify(msg)));
       if (msg.type === "getConfig") return config;

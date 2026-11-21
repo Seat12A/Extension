@@ -19,7 +19,7 @@ describe("clearCaches (popup reload)", () => {
     await chrome.storage.session.set({ authorIds: { lemondefr: "24744541" } });
 
     expect((await lookupBadges(["24744541"]))["24744541"]).toBeNull(); // "no badge", cached
-    badge = { category: "media", color: "#D946EF", badge: null, affiliation: null };
+    badge = { category: "media", color: "#D946EF", badge: { category: "media", color: "#D946EF", label: null, expertise: null }, affiliation: null, affiliations: [] };
     expect((await lookupBadges(["24744541"]))["24744541"]).toBeNull(); // still the cached answer
 
     await clearCaches();

@@ -7,10 +7,6 @@
     "message": "Seat 12A badge: $1",
     "description": "aria-label of a badge. $1 = category label."
   },
-  "content_badge_label_affiliation": {
-    "message": "Seat 12A badge: $1 · $2",
-    "description": "aria-label of an affiliation badge. $1 = title, $2 = organisation."
-  },
   "content_org_logo_alt": {
     "message": "Logo of $1",
     "description": "Alt text of an organisation logo. $1 = organisation."
@@ -111,20 +107,20 @@
     "message": "This account is verified because it belongs to a recognised expert in their field.",
     "description": "Badge reason, expert category"
   },
-  "content_reason_personality": {
-    "message": "This account is verified because it belongs to a public figure.",
-    "description": "Badge reason, personality category"
+  "content_reason_verified": {
+    "message": "This account is verified because its identity has been verified.",
+    "description": "Badge reason, verified category"
   },
   "content_reason_unknown": {
     "message": "This account is verified by Seat 12A.",
     "description": "Badge reason, unknown category"
   },
-  "content_reason_affiliation": {
-    "message": "This account is verified because it is affiliated with $1.",
-    "description": "Affiliation badge reason. $1 = organisation"
+  "content_affiliated_with": {
+    "message": "Affiliated with $1",
+    "description": "Accessible name of the organisation logo next to the name. $1 = organisation"
   },
-  "content_reason_affiliation_title": {
-    "message": "This account is verified because it is affiliated with $1 ($2).",
-    "description": "Affiliation badge reason. $1 = organisation, $2 = role"
+  "content_affiliated_title": {
+    "message": "Affiliations",
+    "description": "Heading of the tooltip and popover of an affiliated-only account (no own badge)"
   }
 }

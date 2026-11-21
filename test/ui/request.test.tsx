@@ -73,7 +73,7 @@ describe("RequestSection form", () => {
     await submit(m.container.querySelector("form")!);
     expect(sent).toEqual([{
       type: "submitBadgeRequest",
-      body: { kind: "badge", account: { platform: "x", external_id: "777" }, category: "personality",
+      body: { kind: "badge", account: { platform: "x", external_id: "777" }, category: "verified",
         justification: valid.justification, evidence_urls: ["https://exemple.fr/preuve"] },
     }]);
     expect(m.container.textContent).toContain("Demande envoyée");

@@ -18,8 +18,8 @@ Toujours décider sur `error.code`, jamais sur `message` :
 | `POST /v1/ingest/observations` | `X-Installation-Token` | `background/queue.ts` | Corps `{filter_version, items}` : version au niveau du lot (un lot = une version), items limités aux champs du schéma (champ inconnu = `422`). Voir [file d'envoi](#file-denvoi) |
 | `GET /v1/content/x/{id}/verdict?lang=` | public | `background/verdicts.ts` | `404 TWR-FCK-013` → rien à afficher (mis en cache) ; cache 5 min |
 | `GET /v1/badges/categories` | public | `background/badges.ts` | Démarrage puis toutes les 24 h |
-| `GET /v1/badges/lookup?platform=x&ids=…` | public | `background/badges.ts` | IDs numériques triés, 100 max, `ETag`/`304`, cache par ID 5 min (absents compris) |
-| `GET /v1/badges/accounts/x/{id}` | public | `background/badges.ts` | Détail au clic ; réponse `{account, badge, affiliations}` normalisée (badge propre, sinon affiliation `primary`) ; `404 TWR-BDG-001` → rien |
+| `GET /v1/badges/lookup?platform=x&ids=…` | public | `background/badges.ts` | IDs numériques triés, 100 max, `ETag`/`304`, cache par ID 5 min (absents compris) ; chaque compte normalisé par `normalizeBadgeAccount` |
+| `GET /v1/badges/accounts/x/{id}` | public | `background/badges.ts` | Détail au clic ; réponse `{account, badge, affiliations}` normalisée par la même fonction ; `404 TWR-BDG-001` → rien |
 | `POST /v1/badges/x-government-hints` | public, limité par IP | `background/badges.ts` | 50 IDs max, un même ID une fois par semaine |
 | `POST /v1/badges/requests`, `POST /v1/badges/reports` | public, limité par IP | `background/forms.ts` | `201` ; `TWR-BDG-019` → « réessayez dans une minute », pas de nouvel essai automatique |
 
@@ -100,8 +100,21 @@ L'affichage sur tous les posts attend un endpoint d'index côté serveur (points
 ## Badges
 
 - Coches de X masquées pour tous les auteurs (classe `seat12a-badges` sur `<html>`).
-- Badge Seat 12A à côté du nom, couleur selon `category` et le thème de X, infobulle
-  traduite, détail au clic avec « Demander un badge » et « Signaler ce badge » (ouvre
-  les formulaires des options, compte prérempli).
+- **Badge et affiliation sont indépendants** (Tower, 21/11/2026) :
+  - la coche Seat 12A ne vient **que du badge propre** du compte (`badge`) ; `category` et
+    `color` du lookup valent `null` sans badge propre, et la coche n'est alors pas affichée ;
+  - une affiliation affiche le **logo de l'organisation principale** (`affiliation`) à côté
+    du nom, sans coche ; sans `logo_url`, l'initiale de l'organisation sur une tuile neutre ;
+  - un compte peut avoir les deux (coche **et** logo) ; la catégorie de l'affilié ne se
+    déduit jamais de celle de son organisation (`org.category`/`org.color` ne servent qu'au détail).
+- Couleur de la coche selon la catégorie et le thème de X (`src/shared/palette.ts`).
+- Infobulle et détail au clic : « Catégorie · domaine » (`badge.expertise` pour les experts),
+  la raison de la certification, puis la liste `affiliations` (5 au plus, principale en
+  tête). Le nom du compte (`badge.label`) n'est pas répété. Le détail propose « Demander
+  un badge » et « Signaler ce badge » (formulaires des options, compte prérempli).
+- `personality` est devenu `verified` : le client lit encore l'ancienne valeur comme
+  `verified` et envoie `verified` dans les demandes.
+- Caches du lookup et du détail : clés `badgeCache2`, `lookupEtags2`,
+  `accountDetailCache2` (les entrées de l'ancien format ne sont jamais relues).
 - Coche grise de X → indice « government » envoyé si l'ID est connu ; **aucun badge
   n'est affiché sur la seule foi de la coche grise**.

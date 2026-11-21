@@ -26,11 +26,15 @@ export const MOTION_CSS = `
 
 export const BADGE_CSS = `
 :host { display: inline-flex; line-height: 0; flex-shrink: 0; }
-.seal { display: inline-flex; align-items: center; justify-content: center; width: 0.8em; height: 0.8em; border-radius: 50%; cursor: pointer; }
+.mark { display: inline-flex; align-items: center; gap: 0.2em; height: 0.85em; border-radius: 0.2em; cursor: pointer; }
+.seal { display: inline-flex; width: 0.8em; height: 0.8em; }
 .seal svg { width: 100%; height: 100%; }
-.seal { --s12a-scale: .6; animation: s12a-in 180ms cubic-bezier(.16,1,.3,1); transition: opacity 120ms ease, transform 120ms ease; }
-.seal:active { transform: scale(.9); }
-.seal:hover { opacity: .85; }
+/* Organisation logo of an affiliation: a small rounded tile, never a check. */
+.org { display: inline-flex; align-items: center; justify-content: center; width: 0.85em; height: 0.85em; border-radius: 0.2em; object-fit: cover; background: var(--muted); box-shadow: 0 0 0 1px var(--line); }
+.org.initial { color: var(--text2); font: 700 0.55em/1 "Seat12A Google Sans", system-ui, sans-serif; width: 1.55em; height: 1.55em; border-radius: 0.36em; }
+.mark { --s12a-scale: .6; animation: s12a-in 180ms cubic-bezier(.16,1,.3,1); transition: opacity 120ms ease, transform 120ms ease; }
+.mark:active { transform: scale(.9); }
+.mark:hover { opacity: .85; }
 `;
 
 export const VERDICT_CSS = `
@@ -78,6 +82,10 @@ export const OVERLAY_CSS = `
 .tip[data-side=top] { --s12a-dy: 4px; } .tip[data-side=bottom] { --s12a-dy: -4px; }
 .tip .l1 { font-weight: 700; }
 .tip .l2 { display: flex; align-items: flex-start; gap: 6px; margin-top: 2px; color: var(--text2); }
+.tip .affs-tip { display: grid; gap: 4px; margin-top: 6px; }
+.tip .affs-tip .l2 { align-items: center; margin-top: 0; }
+.tip .initial, .aff .initial { display: inline-flex; align-items: center; justify-content: center; color: var(--text2); font-weight: 700; font-size: 10px; line-height: 1; box-shadow: 0 0 0 1px var(--line); }
+.aff .initial { font-size: 12px; }
 .tip img, .logo { width: 16px; height: 16px; border-radius: 4px; object-fit: cover; flex: none; background: var(--muted); }
 .card { position: fixed; width: 280px; max-width: calc(100vw - 16px); padding: 16px 16px 0; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); color: var(--text); box-shadow: 0 8px 28px rgba(0,0,0,.16); outline: none; }
 :host([data-theme="dim"]) .card, :host([data-theme="dark"]) .card { box-shadow: 0 0 0 1px rgba(255,255,255,.02), 0 8px 28px rgba(0,0,0,.5); }
@@ -91,6 +99,7 @@ export const OVERLAY_CSS = `
 .card-sub { margin-top: 2px; color: var(--text2); font-size: 13px; line-height: 1.35; overflow-wrap: anywhere; }
 .status { margin: 12px 0 0; color: var(--text2); font-size: 12px; }
 .sect { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
+.sect.first { margin-top: 0; padding-top: 0; border-top: 0; }
 .h { margin: 0 0 8px; color: var(--text2); font-size: 12px; font-weight: 600; }
 .affs { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
 .aff { display: flex; align-items: center; gap: 10px; }

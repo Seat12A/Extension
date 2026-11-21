@@ -7,10 +7,6 @@
     "message": "Badge Seat 12A : $1",
     "description": "aria-label of a badge. $1 = category label."
   },
-  "content_badge_label_affiliation": {
-    "message": "Badge Seat 12A : $1 · $2",
-    "description": "aria-label of an affiliation badge. $1 = title, $2 = organisation."
-  },
   "content_org_logo_alt": {
     "message": "Logo de $1",
     "description": "Alt text of an organisation logo. $1 = organisation."
@@ -111,20 +107,20 @@
     "message": "Ce compte est certifié car c'est un expert reconnu dans son domaine.",
     "description": "Raison du badge, catégorie expert"
   },
-  "content_reason_personality": {
-    "message": "Ce compte est certifié car c'est une personnalité publique.",
-    "description": "Raison du badge, catégorie personnalité"
+  "content_reason_verified": {
+    "message": "Ce compte est certifié car son identité a été vérifiée.",
+    "description": "Raison du badge, catégorie vérifié"
   },
   "content_reason_unknown": {
     "message": "Ce compte est certifié par Seat 12A.",
     "description": "Raison du badge, catégorie inconnue"
   },
-  "content_reason_affiliation": {
-    "message": "Ce compte est certifié car il est affilié à $1.",
-    "description": "Raison d'un badge d'affiliation. $1 = organisation"
+  "content_affiliated_with": {
+    "message": "Affilié à $1",
+    "description": "Nom accessible du logo d'organisation à côté du pseudo. $1 = organisation"
   },
-  "content_reason_affiliation_title": {
-    "message": "Ce compte est certifié car il est affilié à $1 ($2).",
-    "description": "Raison d'un badge d'affiliation. $1 = organisation, $2 = fonction"
+  "content_affiliated_title": {
+    "message": "Affiliations",
+    "description": "Titre de l'infobulle et de la fiche d'un compte seulement affilié (pas de badge propre)"
   }
 }

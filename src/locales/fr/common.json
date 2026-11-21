@@ -22,7 +22,7 @@
   "badge_category_organization": { "message": "Organisation", "description": "Catégorie de badge" },
   "badge_category_media": { "message": "Média", "description": "Catégorie de badge" },
   "badge_category_expert": { "message": "Expert", "description": "Catégorie de badge" },
-  "badge_category_personality": { "message": "Personnalité", "description": "Catégorie de badge" },
+  "badge_category_verified": { "message": "Vérifié", "description": "Catégorie de badge" },
   "badge_category_unknown": { "message": "Compte vérifié", "description": "Catégorie de badge inconnue" },
 
   "report_reason_wrong_category": { "message": "Mauvaise catégorie", "description": "Motif de signalement" },

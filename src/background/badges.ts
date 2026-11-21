@@ -1,13 +1,15 @@
-import type { BadgeAccount, BadgeAccountDetail, BadgeAffiliation, BadgeCategoryInfo } from "~/shared/api-types";
+import type { BadgeAccount, BadgeAccountDetail, BadgeAffiliation, BadgeCategoryInfo, BadgeOwn } from "~/shared/api-types";
 import { ALARMS, LIMITS } from "~/shared/constants";
+import { normalizeCategory } from "~/shared/palette";
 import { gateFetch, validIds } from "./api";
 import { getLocal, setLocal, ttlGet, ttlGetMany, ttlSetMany } from "./store";
 
-const BADGE_KEY = "badgeCache";
-const ETAG_KEY = "lookupEtags";
+// v2: lookup shape of 2026-11-21 (badge and affiliation independent). Old entries are never read.
+const BADGE_KEY = "badgeCache2";
+const ETAG_KEY = "lookupEtags2";
 const ETAG_MAX = 200;
 const ETAG_TTL = 24 * 60 * 60_000;
-const DETAIL_KEY = "accountDetailCache";
+const DETAIL_KEY = "accountDetailCache2";
 const DETAIL_TTL = 5 * 60_000;
 const DETAIL_MAX = 200;
 const CATS_KEY = "badgeCategories";
@@ -16,7 +18,7 @@ const HINTS_MAX = 5000;
 
 const byIdOrder = (a: string, b: string) => a.length - b.length || (a < b ? -1 : a > b ? 1 : 0);
 
-interface EtagEntry { etag: string; body: { accounts?: Record<string, BadgeAccount> } }
+interface EtagEntry { etag: string; body: { accounts?: Record<string, unknown> } }
 
 export async function lookupBadges(ids: string[]): Promise<Record<string, BadgeAccount | null>> {
   const valid = validIds(ids);
@@ -45,8 +47,8 @@ export async function lookupBadges(ids: string[]): Promise<Record<string, BadgeA
     }
     const entries: Record<string, BadgeAccount | null> = {};
     for (const id of chunk) {
-      const acc = Object.hasOwn(body.accounts, id) ? body.accounts[id] : undefined;
-      entries[id] = acc ?? null;
+      const acc = Object.hasOwn(body.accounts, id) ? normalizeBadgeAccount(body.accounts[id]) : null;
+      entries[id] = acc;
       out[id] = entries[id]!;
     }
     await ttlSetMany("session", BADGE_KEY, entries, LIMITS.badgeCacheMax);
@@ -84,53 +86,66 @@ type Obj = Record<string, unknown>;
 const isObj = (v: unknown): v is Obj => !!v && typeof v === "object" && !Array.isArray(v);
 const str = (v: unknown): string | undefined => (typeof v === "string" && v ? v : undefined);
 
+const active = (o: Obj) => o.status === undefined || o.status === "active";
+
 function normalizeAffiliation(a: unknown): BadgeAffiliation | null {
   if (!isObj(a)) return null;
   const org = isObj(a.org) ? a.org : isObj(a.organization) ? a.organization : {};
+  if (!active(org)) return null;
   const label = str(org.label) ?? str(org.name) ?? str(a.org_label) ?? str(a.label);
   if (!label) return null;
   return {
-    org: { label, logo_url: str(org.logo_url) ?? str(a.logo_url) ?? null, platform: "x", external_id: str(org.external_id) ?? (isObj(org.account) ? str(org.account.external_id) : undefined) },
+    org: {
+      platform: "x",
+      external_id: str(org.external_id) ?? (isObj(org.account) ? str(org.account.external_id) : undefined),
+      label,
+      logo_url: str(org.logo_url) ?? str(a.logo_url) ?? null,
+      category: normalizeCategory(str(org.category)) ?? null,
+      color: str(org.color) ?? null,
+    },
     title: str(a.title) ?? null,
-    category: str(a.category) ?? str(org.category),
-    color: str(a.color) ?? str(org.color),
+  };
+}
+
+function normalizeBadge(b: unknown): BadgeOwn | null {
+  if (!isObj(b) || !active(b) || !str(b.category)) return null;
+  return {
+    category: normalizeCategory(str(b.category)!),
+    color: str(b.color) ?? "",
+    label: str(b.label) ?? null,
+    expertise: str(b.expertise)?.slice(0, 120) ?? null,
   };
 }
 
 /**
- * `GET /v1/badges/accounts/{platform}/{id}` as served by Tower:
- *   { account: {platform, external_id}, badge: {category, color, label, logo_url, status, …} | null, affiliations: [...] }
- * (no top-level category/color, unlike the lookup). Normalised to `BadgeAccountDetail`
- * (displayed category/colour = own badge, else main affiliation), and the flat lookup-like
- * shape is accepted too. Returns null when nothing can be displayed.
+ * One account, from the lookup or the detail endpoint (Tower, 2026-11-21):
+ *  - the check comes ONLY from the account's own `badge`; `category`/`color` mirror it;
+ *  - affiliations are independent (main one first: `affiliation`, else `primary: true`), ≤ 5;
+ *  - `personality` is read as `verified`.
+ * A body without any `badge` key but with a top-level category (older flat shape) still
+ * yields a badge; `badge: null` never does. Returns null when nothing can be displayed.
  */
-export function normalizeAccountDetail(body: unknown, id: string): BadgeAccountDetail | null {
+export function normalizeBadgeAccount(body: unknown): BadgeAccount | null {
   if (!isObj(body)) return null;
-  const rawBadge = isObj(body.badge) && (body.badge.status === undefined || body.badge.status === "active") ? body.badge : null;
-  const badge = rawBadge && str(rawBadge.category)
-    ? { category: str(rawBadge.category)!, color: str(rawBadge.color) ?? "", label: str(rawBadge.label) ?? null }
-    : null;
-  const rawAffs = (Array.isArray(body.affiliations) ? body.affiliations : body.affiliation ? [body.affiliation] : []) as unknown[];
-  // The main affiliation is the one flagged `primary: true` (Tower), whatever its position.
-  const affiliations = [...rawAffs]
-    .sort((x, y) => Number(isObj(y) && y.primary === true) - Number(isObj(x) && x.primary === true))
-    .filter((x) => !isObj(x) || !isObj(x.org) || x.org.status === undefined || x.org.status === "active")
-    .map(normalizeAffiliation)
-    .filter((a): a is BadgeAffiliation => !!a);
-  const main = affiliations[0] ?? null;
-  const category = badge?.category ?? str(body.category) ?? main?.category;
-  if (!category) return null;
-  const color = badge?.color || str(body.color) || main?.color || "";
+  let badge = normalizeBadge(body.badge);
+  if (!badge && !("badge" in body) && str(body.category)) badge = normalizeBadge({ category: body.category, color: body.color });
+  const raw = (Array.isArray(body.affiliations) ? body.affiliations : []) as unknown[];
+  const sorted = [...raw].sort((x, y) => Number(isObj(y) && y.primary === true) - Number(isObj(x) && x.primary === true));
+  const list = sorted.map(normalizeAffiliation).filter((a): a is BadgeAffiliation => !!a);
+  const main = normalizeAffiliation(body.affiliation) ?? list[0] ?? null;
+  const affiliations = main
+    ? [main, ...list.filter((a) => !(a.org.label === main.org.label && a.org.external_id === main.org.external_id))]
+    : list;
+  if (!badge && !main) return null;
+  return { category: badge?.category ?? null, color: badge?.color ?? null, badge, affiliation: main, affiliations: affiliations.slice(0, 5) };
+}
+
+/** `GET /v1/badges/accounts/{platform}/{id}`: `{account, badge, affiliations[]}` → `BadgeAccountDetail`. */
+export function normalizeAccountDetail(body: unknown, id: string): BadgeAccountDetail | null {
+  const acc = normalizeBadgeAccount(body);
+  if (!acc || !isObj(body)) return null;
   const account = isObj(body.account) ? body.account : {};
-  return {
-    platform: "x",
-    external_id: str(account.external_id) ?? str(body.external_id) ?? id,
-    category,
-    color,
-    badge,
-    affiliation: main,
-    affiliations,
-  };
+  return { platform: "x", external_id: str(account.external_id) ?? str(body.external_id) ?? id, ...acc };
 }
 
 export async function getAccountDetail(id: string): Promise<BadgeAccountDetail | null> {

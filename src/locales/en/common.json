@@ -22,7 +22,7 @@
   "badge_category_organization": { "message": "Organization", "description": "Badge category" },
   "badge_category_media": { "message": "Media", "description": "Badge category" },
   "badge_category_expert": { "message": "Expert", "description": "Badge category" },
-  "badge_category_personality": { "message": "Public figure", "description": "Badge category" },
+  "badge_category_verified": { "message": "Verified", "description": "Badge category" },
   "badge_category_unknown": { "message": "Verified account", "description": "Unknown badge category" },
 
   "report_reason_wrong_category": { "message": "Wrong category", "description": "Report reason" },
