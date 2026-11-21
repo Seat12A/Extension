@@ -9,10 +9,19 @@ Le lookup des badges, les indices « government » et `filters.accounts` exigent
 numérique X de l'auteur ; le DOM de X montre le pseudo.
 
 **Choix provisoire (couverture partielle)** : `src/content/author-ids.ts` apprend la
-correspondance pseudo → ID là où X l'affiche déjà, dans les boutons « Suivre »
-(`data-testid="<id>-follow"`) de l'en-tête de profil et des cellules de compte
-(suggestions, listes d'abonnés, cartes de survol). Rien n'est chargé ni appelé : seul
-ce qui est à l'écran est lu. La table vit dans `chrome.storage.session`.
+correspondance pseudo → ID là où X l'affiche déjà :
+
+- boutons « Suivre » (`data-testid="<id>-follow"`), où qu'ils soient (en-tête de profil,
+  post principal d'une page de post, cellules de compte, cartes de survol). Le pseudo
+  est lu dans le **libellé du même bouton** (`aria-label="Suivre @pseudo"`), jamais dans
+  l'URL : pendant une navigation profil A → profil B, X met à jour l'en-tête avant le
+  bouton, et l'ancienne règle associait le pseudo de B à l'ID de A ;
+- bloc JSON-LD `ProfilePage` des pages de profil (`additionalName` + `identifier`), qui
+  couvre aussi son propre profil et la navigation déconnectée.
+
+Rien n'est chargé ni appelé : seul ce qui est à l'écran est lu. La table vit dans
+`chrome.storage.session`, ouvert au content script par le service worker
+(`setAccessLevel`). Sans cet appel, la table était perdue à chaque rechargement.
 
 Conséquence : sur le fil, un auteur n'a de badge que si son ID a été vu au moins une
 fois pendant la session. **Solution visée** : une correspondance pseudo → ID servie
@@ -26,6 +35,12 @@ Implémentation provisoire : `min_views`, `min_likes`, `min_reposts`, `min_repli
 `ingestion.md` et le validateur fixent la liste.
 
 ## 3. Vérifications sur tous les posts
+
+**État au 21/11/2026** : `GET /v1/ingest/config` en production renvoie
+`{"version": null, ...}`. Sans version active, l'extension n'interroge **aucun**
+verdict (ni n'envoie d'observation) : aucune vérification ne peut s'afficher tant
+qu'une version de filtres n'est pas activée dans Tower.
+
 
 Seuls les posts filtrés sont interrogés. Un endpoint d'index (liste compacte des posts
 vérifiés, ou recherche par préfixe de hachage, téléchargée périodiquement) permettrait

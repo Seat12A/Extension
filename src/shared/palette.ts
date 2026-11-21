@@ -12,7 +12,8 @@ export interface BadgeColors { fill: string; stroke?: string }
 
 const BADGE: Record<string, { light: BadgeColors; dark: BadgeColors }> = {
   institutional: { light: { fill: "#F46600" }, dark: { fill: "#FF6A00" } },
-  organization: { light: { fill: "#FFBF00", stroke: "#B98B00" }, dark: { fill: "#FFBF00" } },
+  // Deep gold: the white check needs ≥ 3:1 (WCAG 1.4.11). Bright yellow (#FFBF00) gave 1.6:1.
+  organization: { light: { fill: "#A87A00" }, dark: { fill: "#A87A00" } },
   media: { light: { fill: "#EA00FF" }, dark: { fill: "#EE33FF" } },
   expert: { light: { fill: "#00A0C0" }, dark: { fill: "#00D4FF" } },
   personality: { light: { fill: "#335CFF" }, dark: { fill: "#6D8AFF" } },

@@ -13,9 +13,9 @@ import { send } from "~/shared/messages";
 import type { Settings } from "~/shared/settings";
 import { getAuthorId, learnAuthorIds, onAuthorIdLearned } from "./author-ids";
 import { passesFilters } from "./filter";
-import { pageKind } from "./page";
-import { greyCheck, parsePost, type ParsedPost } from "./parser";
-import { BADGE_MARK, NAME_CONTAINERS, SEL, findNameSpot, followButtonId, readOwnHandle } from "./selectors";
+import { pageKind, profileHandleOf } from "./page";
+import { greyCheck, mainStatus, parsePost, type ParsedPost } from "./parser";
+import { BADGES_CLASS, BADGE_HANDLE, BADGE_MARK, NAME_CONTAINERS, SEL, findNameSpot, followButtonId, readOwnHandle } from "./selectors";
 import { createBadge, fitToName } from "./ui/badge";
 import { ui } from "./ui/state";
 import { createVerdict } from "./ui/verdict";
@@ -40,6 +40,40 @@ export interface Pipeline {
 
 function hasBadge(container: Element): boolean {
   return container.hasAttribute(BADGE_MARK) && !!container.querySelector("seat12a-badge");
+}
+
+function clearBadge(container: Element): void {
+  for (const b of Array.from(container.querySelectorAll("seat12a-badge"))) b.remove();
+  container.removeAttribute(BADGE_MARK);
+  container.removeAttribute(BADGE_HANDLE);
+}
+
+const HANDLE_TEXT = /^@([A-Za-z0-9_]{1,15})$/;
+
+/**
+ * Handle shown in a name container: the text node that is exactly `@handle` (X renders
+ * the handle on its own), else a profile link. Never the display name, never a bio mention.
+ */
+export function handleOfContainer(container: Element): string | null {
+  const walker = container.ownerDocument.createTreeWalker(container, NodeFilter.SHOW_TEXT);
+  for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+    const m = HANDLE_TEXT.exec((n.nodeValue ?? "").trim());
+    if (m) return m[1]!;
+  }
+  for (const a of Array.from(container.querySelectorAll('a[href^="/"]'))) {
+    const m = /^\/([A-Za-z0-9_]{1,15})\/?$/.exec(a.getAttribute("href") ?? "");
+    if (m) return m[1]!;
+  }
+  return null;
+}
+
+/** Pages where badges are shown: the post pages, the user's own profile, explore (search box). */
+function badgePage(pathname: string, ownHandle: string | null): boolean {
+  if (pageKind(pathname, ownHandle)) return true;
+  const first = pathname.split("/").filter(Boolean)[0]?.toLowerCase();
+  if (first === "explore") return true;
+  const handle = profileHandleOf(pathname);
+  return !!ownHandle && !!handle && handle.toLowerCase() === ownHandle.toLowerCase();
 }
 
 export function createPipeline(initial: Settings): Pipeline {
@@ -144,18 +178,33 @@ export function createPipeline(initial: Settings): Pipeline {
   let badgeQueue: string[] = [];
   let badgeTimer: ReturnType<typeof setTimeout> | undefined;
 
+  /** Id the container shows right now: its own follow button (cells, hover cards), else the learned one. */
+  function currentId(container: Element, handle: string | null): string | undefined {
+    const btn = container.matches(`${SEL.userCell}, ${SEL.hoverCard}`) ? container.querySelector(SEL.followButton) : null;
+    return (btn ? followButtonId(btn) : null) ?? (handle ? getAuthorId(handle) : undefined);
+  }
+
   function renderBadge(container: Element, id: string, account: BadgeAccount): void {
-    if (!container.isConnected || hasBadge(container)) return;
+    if (!container.isConnected) return;
+    // X reuses DOM nodes across navigations (profile A → profile B): only render if the
+    // container still shows this account.
+    const handle = handleOfContainer(container);
+    if (currentId(container, handle) !== id) return;
+    if (hasBadge(container)) {
+      if (container.getAttribute(BADGE_MARK) === id) return;
+      clearBadge(container);
+    }
     const spot = findNameSpot(container);
     if (!spot) return;
     const badge = createBadge(account, id);
     spot.after.after(badge);
     fitToName(badge, spot.name);
     container.setAttribute(BADGE_MARK, id);
+    if (handle) container.setAttribute(BADGE_HANDLE, handle.toLowerCase());
   }
 
   function requestBadge(container: Element, id: string): void {
-    if (!settings.showBadges || hasBadge(container)) return;
+    if (!settings.showBadges || (hasBadge(container) && container.getAttribute(BADGE_MARK) === id)) return;
     if (badgeMemo.has(id)) {
       const account = badgeMemo.get(id);
       if (account) renderBadge(container, id, account);
@@ -202,29 +251,34 @@ export function createPipeline(initial: Settings): Pipeline {
     set.add(container);
   }
 
-  function handleOfContainer(container: Element): string | null {
-    const own = /@([A-Za-z0-9_]{1,15})/.exec(container.textContent ?? "");
-    if (own) return own[1]!;
-    for (const a of Array.from(container.querySelectorAll('a[href^="/"]'))) {
-      const m = /^\/([A-Za-z0-9_]{1,15})\/?$/.exec(a.getAttribute("href") ?? "");
-      if (m) return m[1]!;
+  /**
+   * One name container: drop a badge that no longer matches what the container shows
+   * (X reused the node for another account, or removed our element), then (re)queue it.
+   */
+  function decorateContainer(c: Element): void {
+    // An outer container (hover card) holding an inner one (user cell…): decorate the inner only.
+    if (c.querySelector(NAME_CONTAINERS)) return;
+    const handle = handleOfContainer(c);
+    const id = currentId(c, handle);
+    if (c.hasAttribute(BADGE_MARK)) {
+      const markHandle = c.getAttribute(BADGE_HANDLE);
+      const stale =
+        !c.querySelector("seat12a-badge") ||
+        (!!handle && !!markHandle && markHandle !== handle.toLowerCase()) ||
+        c.getAttribute(BADGE_MARK) !== id;
+      if (!stale) return;
+      clearBadge(c);
     }
-    return null;
+    badgeForContainer(c, handle, id);
   }
 
-  /** Badges on profile headers and user cells (post names are handled with their article). */
+  /** Badges on every name container under `root` (posts, profile header, cells, hover cards…). */
   function decorateNameContainers(root: ParentNode): void {
     if (!settings.showBadges) return;
     const list: Element[] = [];
     if (root instanceof Element && root.matches(NAME_CONTAINERS)) list.push(root);
     list.push(...Array.from(root.querySelectorAll(NAME_CONTAINERS)));
-    for (const c of list) {
-      if (c.matches(SEL.userName) || hasBadge(c)) continue;
-      const btn = c.matches(SEL.userCell) ? c.querySelector(SEL.followButton) : null;
-      const handle = handleOfContainer(c);
-      const id = (btn ? followButtonId(btn) : null) ?? (handle ? getAuthorId(handle) : undefined);
-      badgeForContainer(c, handle, id ?? undefined);
-    }
+    for (const c of list) decorateContainer(c);
   }
 
   function onIdLearned(handle: string, id: string): void {
@@ -293,7 +347,6 @@ export function createPipeline(initial: Settings): Pipeline {
   // ---- posts -----------------------------------------------------------------
   /** X re-renders subtrees: put back widgets that vanished. */
   function ensureWidgets(article: Element, state: PostState): void {
-    if (settings.showBadges) badgeForContainer(state.post.nodes.userName, state.post.handle, state.authorId ?? getAuthorId(state.post.handle));
     if (state.passed && settings.showVerdicts) {
       const v = verdictMemo.get(state.post.externalId);
       if (v) renderVerdict(article, v);
@@ -301,7 +354,14 @@ export function createPipeline(initial: Settings): Pipeline {
   }
 
   function processArticle(article: Element): void {
-    const known = states.get(article);
+    let known = states.get(article);
+    if (known && mainStatus(article)?.id !== known.post.externalId) {
+      // X recycled this <article> for another post: forget the old one and its card.
+      for (const v of Array.from(article.querySelectorAll("seat12a-verdict"))) v.remove();
+      states.delete(article);
+      attempts.delete(article);
+      known = undefined;
+    }
     if (known) { ensureWidgets(article, known); return; }
     if ((attempts.get(article) ?? 0) >= MAX_ATTEMPTS) return;
     const post = parsePost(article, location, ownHandle);
@@ -311,10 +371,7 @@ export function createPipeline(initial: Settings): Pipeline {
     const passed = passesFilters(post, config, authorId);
     states.set(article, { post, authorId, passed });
 
-    if (settings.showBadges) {
-      badgeForContainer(post.nodes.userName, post.handle, authorId);
-      if (authorId) queueHint(post, authorId);
-    }
+    if (settings.showBadges && authorId) queueHint(post, authorId);
     if (!passed || !config || config.version == null) return;
     if (settings.sendObservations && !sentIds.has(post.externalId)) {
       sentIds.add(post.externalId);
@@ -341,21 +398,29 @@ export function createPipeline(initial: Settings): Pipeline {
         return;
       }
       const kind = pageKind(location.pathname, ownHandle);
+      const badges = settings.showBadges && badgePage(location.pathname, ownHandle);
       const nodes = Array.from(pendingNodes);
       pendingNodes.clear();
       const scan = fullScan;
       fullScan = false;
-      if (!kind || (!nodes.length && !scan)) return;
+      if ((!kind && !badges) || (!nodes.length && !scan)) return;
 
-      learnAuthorIds(document, location.pathname);
-      const articles = new Set<Element>();
-      if (scan) for (const a of Array.from(document.querySelectorAll(SEL.article))) articles.add(a);
-      for (const n of nodes) collectArticles(n, articles);
-      for (const a of articles) processArticle(a);
+      learnAuthorIds(document);
+      if (kind) {
+        const articles = new Set<Element>();
+        if (scan) for (const a of Array.from(document.querySelectorAll(SEL.article))) articles.add(a);
+        for (const n of nodes) collectArticles(n, articles);
+        for (const a of articles) processArticle(a);
+      }
 
-      if (settings.showBadges) {
+      if (badges) {
+        const root = document.documentElement;
+        if (!root.classList.contains(BADGES_CLASS)) root.classList.add(BADGES_CLASS);
         if (scan) decorateNameContainers(document);
         else for (const n of nodes) if (n instanceof Element) decorateNameContainers(n.closest(NAME_CONTAINERS) ?? n);
+        // Containers X updates in place (text only, no added node): re-check what we decorated
+        // and the profile header on every batch.
+        if (!scan) for (const c of Array.from(document.querySelectorAll(`[${BADGE_MARK}], ${SEL.profileHeaderName}`))) decorateContainer(c);
       }
     } catch { /* never throw into the page */ }
   }
@@ -377,7 +442,7 @@ export function createPipeline(initial: Settings): Pipeline {
 
   function removeWidgets(): void {
     for (const el of Array.from(document.querySelectorAll("seat12a-badge, seat12a-verdict"))) el.remove();
-    for (const el of Array.from(document.querySelectorAll(`[${BADGE_MARK}]`))) el.removeAttribute(BADGE_MARK);
+    for (const el of Array.from(document.querySelectorAll(`[${BADGE_MARK}]`))) { el.removeAttribute(BADGE_MARK); el.removeAttribute(BADGE_HANDLE); }
   }
 
   return {

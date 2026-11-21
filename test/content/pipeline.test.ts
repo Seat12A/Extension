@@ -174,6 +174,79 @@ describe("pipeline", () => {
     window.history.pushState({}, "", "/home");
   });
 
+  it("profile A → profile B with a reused header: never keeps A's badge on B", async () => {
+    const org: BadgeAccount = { category: "organization", color: "#FFD60A", badge: { category: "organization", color: "#FFD60A", label: "Seat 12A" }, affiliation: null };
+    chromeMock.messageHandler = (msg) => {
+      sent.push(JSON.parse(JSON.stringify(msg)));
+      if (msg.type === "getConfig") return config;
+      if (msg.type === "lookupBadges") return Object.fromEntries(msg.ids.map((id: string) => [id, id === "555" ? expert : id === "666" ? org : null]));
+      return undefined;
+    };
+    window.history.pushState({}, "", "/macron");
+    document.body.innerHTML = `
+      <div id="btnwrap"><button aria-label="Suivre @macron" data-testid="555-follow"></button></div>
+      <div data-testid="UserName"><div><a href="/macron" role="link"><div dir="ltr"><span><span id="nm">Emmanuel Macron</span></span></div></a></div><div><span id="hd">@macron</span></div></div>`;
+    await boot();
+    const header = () => document.querySelector('[data-testid="UserName"]')!;
+    expect(header().querySelector<HTMLElement>("seat12a-badge")?.dataset.accountId).toBe("555");
+
+    // SPA navigation: X updates the header text in place, the follow button lags behind.
+    window.history.pushState({}, "", "/seat12a");
+    document.getElementById("nm")!.firstChild!.nodeValue = "Seat 12A";
+    document.getElementById("hd")!.firstChild!.nodeValue = "@seat12a";
+    document.body.append(document.createElement("div"));
+    await flush(1000);
+    expect(header().querySelector("seat12a-badge")).toBeNull();
+
+    // The button catches up.
+    document.getElementById("btnwrap")!.innerHTML = '<button aria-label="Suivre @seat12a" data-testid="666-follow"></button>';
+    await flush(1000);
+    const badges = header().querySelectorAll<HTMLElement>("seat12a-badge");
+    expect(badges).toHaveLength(1);
+    expect(badges[0]!.dataset.accountId).toBe("666");
+    window.history.pushState({}, "", "/home");
+  });
+
+  it("shows the badge of the user's own account (profile + side bar) without reading their posts", async () => {
+    window.history.pushState({}, "", "/me_user");
+    document.head.innerHTML = `<script type="application/ld+json">${JSON.stringify({ "@type": "ProfilePage", mainEntity: { "@type": "Person", additionalName: "me_user", identifier: "555" } })}</script>`;
+    document.body.innerHTML = `
+      <nav><a data-testid="AppTabBar_Profile_Link" href="/me_user">Profil</a>
+        <div data-testid="SideNav_AccountSwitcher_Button"><div><span>Moi</span></div><div><span>@me_user</span></div></div></nav>
+      <div data-testid="UserName"><div><a href="/me_user" role="link"><div dir="ltr"><span><span>Moi</span></span></div></a></div><div><span>@me_user</span></div></div>`;
+    await boot();
+    expect(document.querySelector('[data-testid="UserName"] seat12a-badge')).toBeTruthy();
+    expect(document.querySelector('[data-testid="SideNav_AccountSwitcher_Button"] seat12a-badge')).toBeTruthy();
+    expect(sent.some((m) => m.type === "observe" || m.type === "getVerdicts")).toBe(false);
+    document.head.innerHTML = "";
+    window.history.pushState({}, "", "/home");
+  });
+
+  it("badges search suggestions and hover cards", async () => {
+    document.body.innerHTML = `
+      <div data-testid="UserCell"><a href="/ivan" role="link"><span>Ivan</span></a><a href="/ivan" role="link"><span>@ivan</span></a><button data-testid="555-follow"></button></div>
+      <div role="listbox"><div data-testid="TypeaheadUser"><div><span>Ivan @ Paris</span></div><div><span>@ivan</span></div></div></div>`;
+    await boot();
+    expect(document.querySelector('[data-testid="TypeaheadUser"] seat12a-badge')).toBeTruthy();
+    const card = document.createElement("div");
+    card.innerHTML = `<div data-testid="HoverCard"><a href="/ivan" role="link"><span>Ivan</span></a><div><span>@ivan</span></div><p>bio @someone</p><button aria-label="Suivre @ivan" data-testid="555-follow"></button></div>`;
+    document.body.append(card);
+    await flush(1000);
+    expect(document.querySelectorAll('[data-testid="HoverCard"] seat12a-badge')).toHaveLength(1);
+  });
+
+  it("drops the verdict card when X recycles an article for another post", async () => {
+    load("timeline.html");
+    await boot();
+    const art = Array.from(document.querySelectorAll("article")).find((a) => a.querySelector("seat12a-verdict"))!;
+    expect(art).toBeTruthy();
+    const link = art.querySelector('[data-testid="User-Name"] time')!.closest("a")!;
+    link.setAttribute("href", link.getAttribute("href")!.replace(/\d+$/, "1850000000000000999"));
+    art.append(document.createElement("span"));
+    await flush(1000);
+    expect(art.querySelector("seat12a-verdict")).toBeNull();
+  });
+
   it("makes no network call at all", async () => {
     load("timeline.html");
     await boot();

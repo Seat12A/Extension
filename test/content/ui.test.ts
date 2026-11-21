@@ -20,7 +20,7 @@ describe("badge widget", () => {
     category: "organization", color: "#FFBF00", badge: null,
     affiliation: { org: { label: "Le Monde", logo_url: "https://cdn.example/logo.png" }, title: "Journaliste" },
   };
-  it("labels affiliation badges, strokes organisations on light, and opens the popover", async () => {
+  it("labels affiliation badges, colours organisations in readable gold, and opens the popover", async () => {
     setTranslator(createTranslator("fr"));
     setTheme("light");
     const host = createBadge(account, "42");
@@ -28,9 +28,10 @@ describe("badge widget", () => {
     const btn = host.shadowRoot!.querySelector("button")!;
     expect(btn.getAttribute("aria-label")).toBe("Badge Seat 12A : Journaliste · Le Monde");
     expect(host.getAttribute("data-theme")).toBe("light");
-    expect(host.shadowRoot!.querySelector("path")!.getAttribute("stroke")).toBe("#B98B00");
-    setTheme("dark");
+    expect(host.shadowRoot!.querySelector("path")!.getAttribute("fill")).toBe("#A87A00");
     expect(host.shadowRoot!.querySelector("path")!.getAttribute("stroke")).toBeNull();
+    setTheme("dark");
+    expect(host.shadowRoot!.querySelector("path")!.getAttribute("fill")).toBe("#A87A00");
 
     chromeMock.messageHandler = (m) => (m.type === "getAccountDetail" ? { ...account, platform: "x", external_id: "42", affiliations: [account.affiliation] } : { ok: true });
     btn.click();

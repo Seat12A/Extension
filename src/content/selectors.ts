@@ -24,16 +24,29 @@ export const SEL = {
   profileHeaderName: '[data-testid="UserName"]',
   userCell: '[data-testid="UserCell"]',
   hoverCard: '[data-testid="HoverCard"]',
+  typeaheadUser: '[data-testid="TypeaheadUser"]',
+  accountSwitcher: '[data-testid="SideNav_AccountSwitcher_Button"]',
   followButton: '[data-testid$="-follow"], [data-testid$="-unfollow"]',
   primaryColumn: '[data-testid="primaryColumn"]',
   roleLink: '[role="link"]',
   statusLink: 'a[href*="/status/"]',
 } as const;
 
-/** Every name container we decorate with a badge. */
-export const NAME_CONTAINERS = `${SEL.userName}, ${SEL.profileHeaderName}, ${SEL.userCell}`;
+/**
+ * Every name container we decorate with a badge: post author, profile header, user
+ * cells, hover cards (account preview), search suggestions, the account switcher.
+ */
+export const NAME_CONTAINERS = [
+  SEL.userName, SEL.profileHeaderName, SEL.userCell, SEL.hoverCard, SEL.typeaheadUser, SEL.accountSwitcher,
+].join(", ");
+
+/** Attribute holding the handle a badge was rendered for (stale-badge detection). */
+export const BADGE_HANDLE = "data-seat12a-handle";
 
 export const BADGE_MARK = "data-seat12a-badge";
+
+/** Class on <html> that hides X checkmarks (see content.css). */
+export const BADGES_CLASS = "seat12a-badges";
 
 /** Handle of the logged-in user, read from the left navigation (used ONLY locally). */
 export function readOwnHandle(doc: Document = document): string | null {

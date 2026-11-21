@@ -50,13 +50,14 @@ une catégorie que le client ne connaît pas encore) :
 | Badge | Mode clair | Contraste sur blanc | Mode sombre | Contraste sur noir | Sur « Dim » |
 |---|---|---|---|---|---|
 | Institutionnel | `#F46600` | 3,1:1 | `#FF6A00` | 7,3:1 | 5,8:1 |
-| Organisation | `#FFBF00` + contour `#B98B00` | contour | `#FFBF00` | 12,7:1 | 10,0:1 |
+| Organisation | `#A87A00` | 3,9:1 | `#A87A00` | 5,5:1 | 4,3:1 |
 | Média | `#EA00FF` | 3,6:1 | `#EE33FF` | 6,6:1 | 5,1:1 |
 | Expert | `#00A0C0` | 3,1:1 | `#00D4FF` | 11,9:1 | 9,4:1 |
 | Personnalité | `#335CFF` | 5,1:1 | `#6D8AFF` | 6,8:1 | 5,3:1 |
 
-Source unique : `src/shared/palette.ts`. Le jaune « Organisation » n'atteint pas 3:1
-sur blanc : en mode clair il porte un contour `#B98B00`.
+Source unique : `src/shared/palette.ts`. « Organisation » est un or foncé : l'ancien
+jaune `#FFBF00` ne donnait que 1,6:1 avec la coche blanche, illisible. `#A87A00` donne
+3,9:1 avec la coche blanche (seuil WCAG 1.4.11 : 3:1).
 
 ### Badge à côté du nom
 

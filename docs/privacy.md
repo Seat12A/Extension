@@ -11,14 +11,20 @@ Web Store. Il n'est pas un avis juridique : à faire relire par une personne com
 |---|---|---|
 | Contenu d'un post public qui correspond aux filtres de l'équipe (ID, pseudo de l'auteur, texte, langue, date, métriques affichées, médias, IDs du post cité / parent) | Envoi des observations (désactivable) | `POST /v1/ingest/observations` |
 | Jeton d'installation aléatoire | Avec ces envois seulement | idem |
-| IDs numériques des auteurs affichés à l'écran | Affichage des badges | `GET /v1/badges/lookup` (public, cachable) |
+| IDs numériques des comptes affichés à l'écran, **y compris celui de l'utilisateur** (son profil, barre latérale) | Affichage des badges | `GET /v1/badges/lookup` (public, cachable) |
 | ID d'un post filtré + langue choisie | Affichage des vérifications | `GET /v1/content/x/{id}/verdict` |
 | ID d'un auteur à coche grise | Indice « government » | `POST /v1/badges/x-government-hints` |
 | Contenu d'un formulaire (demande, signalement) | Sur action explicite | `POST /v1/badges/requests` / `reports` |
 
 ## Ce qui n'est jamais transmis
 
-Le compte X connecté, son pseudo, l'historique de navigation, le fil d'actualité
+Nuance sur le compte connecté : pour afficher son propre badge, son ID numérique part
+dans un lookup de badges, mélangé aux autres comptes affichés et sans rien qui le
+désigne comme « le sien ». Un serveur qui observerait les requêtes d'une même IP
+pourrait toutefois le deviner (c'est l'ID qui revient sur toutes les pages). Ses posts,
+eux, ne sont jamais lus ni envoyés.
+
+Le pseudo du compte connecté, ses propres posts, l'historique de navigation, le fil d'actualité
 complet, les messages privés, les notifications, les brouillons, les posts protégés,
 les publicités. Aucun cookie n'est envoyé (`credentials: "omit"`). Côté serveur : le
 jeton n'est pas stocké (pseudonyme du jour seulement), aucune IP n'est stockée, aucun

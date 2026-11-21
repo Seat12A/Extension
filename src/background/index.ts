@@ -6,6 +6,13 @@ import { ensureFlushAlarm, flush } from "./queue";
 import { handle } from "./router";
 import { getToken } from "./token";
 
+// The content script keeps its handle → id table in storage.session. That area is
+// closed to content scripts by default: without this, every read/write there fails
+// silently and the table is lost at each page load (badges come and go).
+try {
+  void chrome.storage.session.setAccessLevel?.({ accessLevel: "TRUSTED_AND_UNTRUSTED_CONTEXTS" })?.catch?.(() => {});
+} catch { /* older browser: memory-only table */ }
+
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (sender?.id !== chrome.runtime.id) return false;
   const type = (msg as { type?: unknown } | null)?.type;
