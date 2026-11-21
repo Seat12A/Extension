@@ -77,7 +77,7 @@ export const OVERLAY_CSS = `
 .tip.on { display: block; animation: s12a-in 120ms cubic-bezier(.16,1,.3,1); }
 .tip[data-side=top] { --s12a-dy: 4px; } .tip[data-side=bottom] { --s12a-dy: -4px; }
 .tip .l1 { font-weight: 700; }
-.tip .l2 { display: flex; align-items: center; gap: 6px; margin-top: 2px; color: var(--text2); }
+.tip .l2 { display: flex; align-items: flex-start; gap: 6px; margin-top: 2px; color: var(--text2); }
 .tip img, .logo { width: 16px; height: 16px; border-radius: 4px; object-fit: cover; flex: none; background: var(--muted); }
 .card { position: fixed; width: 280px; max-width: calc(100vw - 16px); padding: 16px 16px 0; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); color: var(--text); box-shadow: 0 8px 28px rgba(0,0,0,.16); outline: none; }
 :host([data-theme="dim"]) .card, :host([data-theme="dark"]) .card { box-shadow: 0 0 0 1px rgba(255,255,255,.02), 0 8px 28px rgba(0,0,0,.5); }

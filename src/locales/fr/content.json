@@ -11,10 +11,6 @@
     "message": "Badge Seat 12A : $1 · $2",
     "description": "aria-label of an affiliation badge. $1 = title, $2 = organisation."
   },
-  "content_tip_affiliation": {
-    "message": "$1 · $2",
-    "description": "Tooltip line: $1 = title, $2 = organisation."
-  },
   "content_org_logo_alt": {
     "message": "Logo de $1",
     "description": "Alt text of an organisation logo. $1 = organisation."
@@ -98,5 +94,37 @@
   "content_translated_from": {
     "message": "Traduit automatiquement (original en $1)",
     "description": "Note traduite automatiquement ; $1 = langue d'origine, ex. « anglais »."
+  },
+  "content_reason_institutional": {
+    "message": "Ce compte est certifié car il représente une institution publique.",
+    "description": "Raison du badge, catégorie institution"
+  },
+  "content_reason_organization": {
+    "message": "Ce compte est certifié car il représente une organisation.",
+    "description": "Raison du badge, catégorie organisation"
+  },
+  "content_reason_media": {
+    "message": "Ce compte est certifié car c'est un média.",
+    "description": "Raison du badge, catégorie média"
+  },
+  "content_reason_expert": {
+    "message": "Ce compte est certifié car c'est un expert reconnu dans son domaine.",
+    "description": "Raison du badge, catégorie expert"
+  },
+  "content_reason_personality": {
+    "message": "Ce compte est certifié car c'est une personnalité publique.",
+    "description": "Raison du badge, catégorie personnalité"
+  },
+  "content_reason_unknown": {
+    "message": "Ce compte est certifié par Seat 12A.",
+    "description": "Raison du badge, catégorie inconnue"
+  },
+  "content_reason_affiliation": {
+    "message": "Ce compte est certifié car il est affilié à $1.",
+    "description": "Raison d'un badge d'affiliation. $1 = organisation"
+  },
+  "content_reason_affiliation_title": {
+    "message": "Ce compte est certifié car il est affilié à $1 ($2).",
+    "description": "Raison d'un badge d'affiliation. $1 = organisation, $2 = fonction"
   }
 }

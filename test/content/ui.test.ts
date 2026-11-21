@@ -48,6 +48,29 @@ describe("badge widget", () => {
     expect(chromeMock.runtime.sendMessage).toHaveBeenCalledWith({ type: "openOptions", hash: "request?account=42" });
     expect(overlay.querySelector(".card")).toBeNull();
   });
+  it("explains why the account is verified instead of repeating its name", async () => {
+    setTranslator(createTranslator("fr"));
+    const media: BadgeAccount = { category: "media", color: "#D946EF", badge: { category: "media", color: "#D946EF", label: "Le Monde" }, affiliation: null };
+    const host = createBadge(media, "24744541");
+    document.body.append(host);
+    const btn = host.shadowRoot!.querySelector("button")!;
+    btn.dispatchEvent(new MouseEvent("mouseenter"));
+    const overlay = document.querySelector("seat12a-overlay")!.shadowRoot!;
+    const tip = overlay.querySelector(".tip")!.textContent!;
+    expect(tip).toContain("Ce compte est certifié car c'est un média.");
+    expect(tip).not.toContain("Le Monde");
+    chromeMock.messageHandler = () => null;
+    btn.click();
+    await Promise.resolve(); await Promise.resolve();
+    expect(overlay.querySelector(".card-sub")!.textContent).toBe("Ce compte est certifié car c'est un média.");
+    expect(overlay.querySelector(".card")!.textContent).not.toContain("Le Monde");
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    // Affiliation: the reason names the organisation.
+    const tip2 = createBadge(account, "42");
+    document.body.append(tip2);
+    tip2.shadowRoot!.querySelector("button")!.dispatchEvent(new MouseEvent("mouseenter"));
+    expect(overlay.querySelector(".tip")!.textContent).toContain("Ce compte est certifié car il est affilié à Le Monde (Journaliste).");
+  });
   it("closes on Escape", async () => {
     const host = createBadge(account, "42");
     document.body.append(host);

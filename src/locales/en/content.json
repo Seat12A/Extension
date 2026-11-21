@@ -11,10 +11,6 @@
     "message": "Seat 12A badge: $1 · $2",
     "description": "aria-label of an affiliation badge. $1 = title, $2 = organisation."
   },
-  "content_tip_affiliation": {
-    "message": "$1 · $2",
-    "description": "Tooltip line: $1 = title, $2 = organisation."
-  },
   "content_org_logo_alt": {
     "message": "Logo of $1",
     "description": "Alt text of an organisation logo. $1 = organisation."
@@ -98,5 +94,37 @@
   "content_translated_from": {
     "message": "Machine-translated (original in $1)",
     "description": "Machine-translated note; $1 = original language, e.g. “French”."
+  },
+  "content_reason_institutional": {
+    "message": "This account is verified because it represents a public institution.",
+    "description": "Badge reason, institution category"
+  },
+  "content_reason_organization": {
+    "message": "This account is verified because it represents an organisation.",
+    "description": "Badge reason, organisation category"
+  },
+  "content_reason_media": {
+    "message": "This account is verified because it is a media outlet.",
+    "description": "Badge reason, media category"
+  },
+  "content_reason_expert": {
+    "message": "This account is verified because it belongs to a recognised expert in their field.",
+    "description": "Badge reason, expert category"
+  },
+  "content_reason_personality": {
+    "message": "This account is verified because it belongs to a public figure.",
+    "description": "Badge reason, personality category"
+  },
+  "content_reason_unknown": {
+    "message": "This account is verified by Seat 12A.",
+    "description": "Badge reason, unknown category"
+  },
+  "content_reason_affiliation": {
+    "message": "This account is verified because it is affiliated with $1.",
+    "description": "Affiliation badge reason. $1 = organisation"
+  },
+  "content_reason_affiliation_title": {
+    "message": "This account is verified because it is affiliated with $1 ($2).",
+    "description": "Affiliation badge reason. $1 = organisation, $2 = role"
   }
 }

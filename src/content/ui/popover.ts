@@ -5,6 +5,7 @@ import { h, safeHttps } from "./dom";
 import { brandMark, icon, sealIcon } from "./icons";
 import { getOverlay, place } from "./overlay";
 import { ui } from "./state";
+import { badgeReason } from "./tooltip";
 
 interface Open { card: HTMLElement; anchor: HTMLElement; cleanup: () => void }
 let current: Open | null = null;
@@ -59,15 +60,13 @@ function body(detail: BadgeAccount | BadgeAccountDetail): Node[] {
   const category = t.enumLabel("badge_category", detail.category);
   const colors = badgeColors(detail.category, ui.theme, detail.color);
   const affs = ("affiliations" in detail && detail.affiliations?.length ? detail.affiliations : detail.affiliation ? [detail.affiliation] : []);
-  const main = detail.affiliation;
-  const label = detail.badge?.label?.trim()
-    || (main ? (main.title?.trim() ? t.t("content_tip_affiliation", main.title.trim(), main.org.label) : main.org.label) : "");
+  const label = badgeReason(detail);
   const out: Node[] = [
     h(
       "div",
       { class: "card-head" },
       sealIcon(28, colors.fill, colors.stroke),
-      h("div", { class: "card-id" }, h("div", { class: "card-title" }, category), label ? h("div", { class: "card-sub" }, label) : null),
+      h("div", { class: "card-id" }, h("div", { class: "card-title" }, category), h("div", { class: "card-sub" }, label)),
     ),
   ];
   if (affs.length) {
