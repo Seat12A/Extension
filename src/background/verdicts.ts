@@ -2,21 +2,32 @@ import type { PublicVerdict } from "~/shared/api-types";
 import { LIMITS } from "~/shared/constants";
 import { errorCode, gateFetch, validIds } from "./api";
 import { ttlGetMany, ttlSetMany } from "./store";
+import { checkVerdictIndex } from "./verdict-index";
 
 const KEY = "verdictCache";
 const CONCURRENCY = 4;
 
-export async function getVerdicts(ids: string[], lang: string): Promise<Record<string, PublicVerdict | null>> {
+/**
+ * Verdicts of the posts on screen. `ids`: every displayed post; `filtered`: those that
+ * pass the ingestion filters (all of `ids` when absent).
+ *  - Verdict index served: only the posts listed in their bucket are looked up by id
+ *    (the others never leave the device, only their 4-character bucket does).
+ *  - Index not deployed yet (404): previous behaviour, filtered posts only.
+ */
+export async function getVerdicts(ids: string[], lang: string, filtered?: string[]): Promise<Record<string, PublicVerdict | null>> {
   const l = typeof lang === "string" && /^[a-z]{2,3}$/.test(lang) ? lang : "en";
   const valid = validIds(ids);
+  const passed = new Set(filtered === undefined ? valid : validIds(filtered));
   const out: Record<string, PublicVerdict | null> = {};
   const cached = await ttlGetMany<PublicVerdict | null>("session", KEY, valid.map((id) => `${id}|${l}`), LIMITS.verdictCacheTtlMs);
-  const misses: string[] = [];
+  const unknown: string[] = [];
   for (const id of valid) {
     const k = `${id}|${l}`;
     if (cached.has(k)) out[id] = cached.get(k) ?? null;
-    else misses.push(id);
+    else { out[id] = null; unknown.push(id); }
   }
+  const index = unknown.length ? await checkVerdictIndex(unknown) : { verified: [], missing: false };
+  const misses = index.missing ? unknown.filter((id) => passed.has(id)) : index.verified;
   const toCache: Record<string, PublicVerdict | null> = {};
   let next = 0;
   const worker = async () => {

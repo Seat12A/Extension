@@ -31,7 +31,8 @@ export type SubmitResult = { ok: true } | { ok: false; code: string };
 export type Request =
   | { type: "observe"; items: ObservationItem[] }
   | { type: "getConfig" }
-  | { type: "getVerdicts"; ids: string[]; lang: string }
+  /** `ids`: posts on screen; `filtered`: those passing the ingestion filters. */
+  | { type: "getVerdicts"; ids: string[]; lang: string; filtered?: string[] }
   | { type: "lookupBadges"; ids: string[] }
   | { type: "getBadgeCategories" }
   | { type: "getAccountDetail"; id: string }

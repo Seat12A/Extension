@@ -8,6 +8,7 @@ import { CACHE_EPOCH_KEY } from "~/shared/constants";
 import { bypassHttpCache } from "./api";
 import { refreshCategories } from "./badges";
 import { forceRefreshConfig } from "./config";
+import { clearVerdictIndex } from "./verdict-index";
 
 const SESSION_KEYS = [
   "verdictCache", "badgeCache2", "lookupEtags2", "accountDetailCache2", "authorIds",
@@ -21,6 +22,7 @@ export async function clearCaches(): Promise<{ ok: true }> {
   await chrome.storage.session.remove(SESSION_KEYS);
   await chrome.storage.local.remove(LOCAL_KEYS);
   bypassHttpCache(BYPASS_MS);
+  clearVerdictIndex();
   await Promise.all([forceRefreshConfig(), refreshCategories()]);
   // Tells every open x.com tab to drop its in-memory state and redraw.
   await chrome.storage.local.set({ [CACHE_EPOCH_KEY]: Date.now() });

@@ -16,7 +16,8 @@ Toujours décider sur `error.code`, jamais sur `message` :
 |---|---|---|---|
 | `GET /v1/ingest/config` | public | `background/config.ts` | Démarrage puis toutes les 15 min ; `If-None-Match` → `304` garde le cache ; échec → dernière config connue ; `version` nulle (avec `filters: {}`, clés absentes = vides) → rien n'est envoyé |
 | `POST /v1/ingest/observations` | `X-Installation-Token` | `background/queue.ts` | Corps `{filter_version, items}` : version au niveau du lot (un lot = une version), items limités aux champs du schéma (champ inconnu = `422`). Voir [file d'envoi](#file-denvoi) |
-| `GET /v1/content/x/{id}/verdict?lang=` | public | `background/verdicts.ts` | `404 TWR-FCK-013` → rien à afficher (mis en cache) ; cache 5 min |
+| `GET /v1/verdict-index/x/{bucket}` | public | `background/verdict-index.ts` | Boîte = 4 premiers caractères hex de SHA-256(ID) ; cache **mémoire** LRU 2 000 boîtes, 5 min ; une requête en vol par boîte ; `If-None-Match` → `304` garde la liste ; `404` (route pas déployée) → ancien comportement, nouvel essai dans 10 min ; `422` journalisé ; `5xx`/réseau → rien, nouvel essai dans 1 min |
+| `GET /v1/content/x/{id}/verdict?lang=` | public | `background/verdicts.ts` | Seulement pour les posts présents dans l'index ; `404 TWR-FCK-013` → rien à afficher (mis en cache) ; cache 5 min |
 | `GET /v1/badges/categories` | public | `background/badges.ts` | Démarrage puis toutes les 24 h |
 | `GET /v1/badges/lookup?platform=x&ids=…` | public | `background/badges.ts` | IDs numériques triés, 100 max, `ETag`/`304`, cache par ID 5 min (absents compris) ; chaque compte normalisé par `normalizeBadgeAccount` |
 | `GET /v1/badges/accounts/x/{id}` | public | `background/badges.ts` | Détail au clic ; réponse `{account, badge, affiliations}` normalisée par la même fonction ; `404 TWR-BDG-001` → rien |
@@ -92,10 +93,19 @@ l'état (actif, quota atteint, injoignable, sans filtres, en pause).
 
 ## Vérifications : quels posts interroger ?
 
-Seuls les posts **qui passent les filtres** sont interrogés (au plus une fois par post
-et par période de cache), que l'envoi des observations soit actif ou non. Interroger
-gate pour chaque post affiché révélerait au serveur tout ce que l'utilisateur regarde.
-L'affichage sur tous les posts attend un endpoint d'index côté serveur (points ouverts).
+**Tous les posts affichés**, filtrés ou non, et même sans version de filtres active.
+Les filtres ne servent plus qu'à l'envoi des observations.
+
+1. Le content script envoie au service worker les IDs des posts affichés (et, à part,
+   ceux qui passent les filtres). Rien ne sort encore.
+2. Le service worker calcule SHA-256(ID) et ne demande à gate que la **boîte** (4
+   caractères hex) : `GET /v1/verdict-index/x/{boîte}`.
+3. Seuls les posts dont l'empreinte **complète** figure dans la liste sont interrogés
+   par ID (`GET /v1/content/x/{id}/verdict`).
+4. Route absente (`404`, pas encore déployée) : ancien comportement, posts filtrés seulement.
+
+Un « pas de verdict » est redemandé au bout de 5 min (une vérification a pu être publiée
+entre-temps). Délai d'apparition ou de disparition d'une vérification : 5 min au plus.
 
 ## Badges
 

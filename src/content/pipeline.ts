@@ -3,7 +3,10 @@
  * filters and talks to the service worker (the ONLY network path).
  *
  * Privacy rules enforced here:
- *  - only posts that pass the filters are sent (observations) or looked up (verdicts);
+ *  - only posts that pass the filters are sent (observations);
+ *  - verdicts: every displayed post is checked against Tower's verdict index, which only
+ *    receives a 4-character bucket of its hash (done in the worker); the full id is sent
+ *    only for posts that are fact-checked;
  *  - nothing about the user is sent: the logged-in handle is used locally to skip own posts;
  *  - only what is displayed is read: no scrolling, no page loads, no X APIs.
  */
@@ -25,6 +28,7 @@ const OBSERVE_FLUSH_MAX = 20;
 const HINTS_FLUSH_MS = 5000;
 const VERDICT_BATCH_MS = 300;
 const VERDICT_MAX_IDS = 50;
+const VERDICT_NULL_TTL_MS = 5 * 60 * 1000;
 const CONFIG_REFRESH_MS = 5 * 60 * 1000;
 const OWN_HANDLE_GRACE_MS = 3000;
 const MAX_ATTEMPTS = 5;
@@ -293,6 +297,10 @@ export function createPipeline(initial: Settings): Pipeline {
 
   // ---- verdicts --------------------------------------------------------------
   const verdictMemo = new Map<string, PublicVerdict | null>();
+  /** When a "no verdict" answer was received: asked again after VERDICT_NULL_TTL_MS. */
+  const verdictNullAt = new Map<string, number>();
+  /** Ids that pass the ingestion filters (used by the worker while the index is not served). */
+  const verdictFiltered = new Set<string>();
   const verdictRequested = new Set<string>();
   const verdictAwaiting = new Map<string, Set<Element>>();
   let verdictQueue: string[] = [];
@@ -312,6 +320,11 @@ export function createPipeline(initial: Settings): Pipeline {
 
   function requestVerdict(article: Element, id: string): void {
     if (!settings.showVerdicts) return;
+    if (verdictMemo.get(id) === null && Date.now() - (verdictNullAt.get(id) ?? 0) > VERDICT_NULL_TTL_MS) {
+      // A fact-check may have been published since (or the last try failed): ask again.
+      verdictMemo.delete(id);
+      verdictRequested.delete(id);
+    }
     if (verdictMemo.has(id)) {
       const v = verdictMemo.get(id);
       if (v) renderVerdict(article, v);
@@ -332,27 +345,28 @@ export function createPipeline(initial: Settings): Pipeline {
     verdictQueue = [];
     for (let i = 0; i < ids.length; i += VERDICT_MAX_IDS) {
       const chunk = ids.slice(i, i + VERDICT_MAX_IDS);
-      void send({ type: "getVerdicts", ids: chunk, lang: ui.t.lang })
+      const filtered = chunk.filter((id) => verdictFiltered.has(id));
+      void send({ type: "getVerdicts", ids: chunk, lang: ui.t.lang, filtered })
         .then((res) => {
           for (const id of chunk) {
             const v = res?.[id] ?? null;
             verdictMemo.set(id, v);
+            if (v === null) verdictNullAt.set(id, Date.now());
             const waiting = verdictAwaiting.get(id);
             verdictAwaiting.delete(id);
             if (v && waiting && settings.showVerdicts) for (const a of waiting) renderVerdict(a, v);
           }
         })
-        .catch(() => { /* at most once per post per page session */ });
+        .catch(() => {
+          for (const id of chunk) { verdictMemo.set(id, null); verdictNullAt.set(id, Date.now()); verdictAwaiting.delete(id); }
+        });
     }
   }
 
   // ---- posts -----------------------------------------------------------------
   /** X re-renders subtrees: put back widgets that vanished. */
   function ensureWidgets(article: Element, state: PostState): void {
-    if (state.passed && settings.showVerdicts) {
-      const v = verdictMemo.get(state.post.externalId);
-      if (v) renderVerdict(article, v);
-    }
+    if (settings.showVerdicts) requestVerdict(article, state.post.externalId);
   }
 
   function processArticle(article: Element): void {
@@ -374,12 +388,14 @@ export function createPipeline(initial: Settings): Pipeline {
     states.set(article, { post, authorId, passed });
 
     if (settings.showBadges && authorId) queueHint(post, authorId);
+    if (passed) verdictFiltered.add(post.externalId);
+    // Fact-checks on EVERY post (no dependence on the filters nor on an active version).
+    requestVerdict(article, post.externalId);
     if (!passed || !config || config.version == null) return;
     if (settings.sendObservations && !sentIds.has(post.externalId)) {
       sentIds.add(post.externalId);
       queueObservation(toItem(post, authorId, config.version));
     }
-    requestVerdict(article, post.externalId);
   }
 
   function collectArticles(node: Node, into: Set<Element>): void {
@@ -490,6 +506,7 @@ export function createPipeline(initial: Settings): Pipeline {
       removeWidgets();
       states = new WeakMap();
       verdictMemo.clear();
+      verdictNullAt.clear();
       verdictRequested.clear();
       verdictAwaiting.clear();
       badgeAwaiting.clear();

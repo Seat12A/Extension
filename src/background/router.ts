@@ -15,7 +15,7 @@ export async function handle(msg: Request): Promise<ResponseMap[Request["type"]]
   switch (msg.type) {
     case "observe": return enqueue(msg.items);
     case "getConfig": return getConfig();
-    case "getVerdicts": return getVerdicts(msg.ids, msg.lang);
+    case "getVerdicts": return getVerdicts(msg.ids, msg.lang, msg.filtered);
     case "lookupBadges": return lookupBadges(msg.ids);
     case "getBadgeCategories": return getBadgeCategories();
     case "getAccountDetail": return getAccountDetail(msg.id);

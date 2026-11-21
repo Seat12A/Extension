@@ -12,9 +12,16 @@ Web Store. Il n'est pas un avis juridique : à faire relire par une personne com
 | Contenu d'un post public qui correspond aux filtres de l'équipe (ID, pseudo de l'auteur, texte, langue, date, métriques affichées, médias, IDs du post cité / parent) | Envoi des observations (désactivable) | `POST /v1/ingest/observations` |
 | Jeton d'installation aléatoire | Avec ces envois seulement | idem |
 | IDs numériques des comptes affichés à l'écran, **y compris celui de l'utilisateur** (son profil, barre latérale) | Affichage des badges | `GET /v1/badges/lookup` (public, cachable) |
-| ID d'un post filtré + langue choisie | Affichage des vérifications | `GET /v1/content/x/{id}/verdict` |
+| Préfixe de 4 caractères de l'empreinte SHA-256 d'un post affiché (commun à environ 1 post sur 65 536) | Savoir si un post est vérifié | `GET /v1/verdict-index/x/{boîte}` |
+| ID d'un post **vérifié** (présent dans l'index) + langue choisie | Affichage de sa vérification | `GET /v1/content/x/{id}/verdict` |
 | ID d'un auteur à coche grise | Indice « government » | `POST /v1/badges/x-government-hints` |
 | Contenu d'un formulaire (demande, signalement) | Sur action explicite | `POST /v1/badges/requests` / `reports` |
+
+Pour savoir si un post est vérifié, l'extension n'envoie qu'un préfixe de 4 caractères
+de son empreinte, commun à environ 1 post sur 65 536. L'ID complet d'un post non vérifié
+ne part jamais (sauf s'il correspond aux filtres et que l'envoi des observations est
+actif, comme avant). Les listes reçues sont gardées en mémoire 5 minutes au plus, jamais
+sur disque.
 
 ## Ce qui n'est jamais transmis
 

@@ -36,15 +36,10 @@ Implémentation provisoire : `min_views`, `min_likes`, `min_reposts`, `min_repli
 
 ## 3. Vérifications sur tous les posts
 
-**État au 21/11/2026** : `GET /v1/ingest/config` en production renvoie
-`{"version": null, ...}`. Sans version active, l'extension n'interroge **aucun**
-verdict (ni n'envoie d'observation) : aucune vérification ne peut s'afficher tant
-qu'une version de filtres n'est pas activée dans Tower.
-
-
-Seuls les posts filtrés sont interrogés. Un endpoint d'index (liste compacte des posts
-vérifiés, ou recherche par préfixe de hachage, téléchargée périodiquement) permettrait
-d'afficher les vérifications partout sans révéler la navigation.
+**Réglé côté client (21/11/2026)** : index `GET /v1/verdict-index/x/{boîte}` (voir
+`tower-contract.md`). Tant que la route n'est pas déployée en production (elle renvoie
+`404 TWR-GEN-002` à cette date), l'extension garde l'ancien comportement : seuls les
+posts filtrés sont interrogés, et rien ne s'affiche sans version de filtres active.
 
 ## 4. Limitation de débit des lectures publiques
 

@@ -77,7 +77,25 @@ describe("pipeline", () => {
     load("timeline.html");
     await boot();
     expect(sent.some((m) => m.type === "observe")).toBe(false);
-    expect(sent.find((m) => m.type === "getVerdicts")!.ids).toEqual(["1850000000000000101", "1850000000000000103", "1850000000000000105"]);
+    const ask = sent.find((m) => m.type === "getVerdicts")!;
+    expect(ask.filtered).toEqual(["1850000000000000101", "1850000000000000103", "1850000000000000105"]);
+  });
+
+  it("asks verdicts for EVERY displayed post, even without an active filter version", async () => {
+    load("timeline.html");
+    chromeMock.messageHandler = (msg) => {
+      sent.push(JSON.parse(JSON.stringify(msg)));
+      if (msg.type === "getConfig") return { version: null, filters: { keywords: [], accounts: [], thresholds: {} } };
+      if (msg.type === "getVerdicts") return Object.fromEntries(msg.ids.map((id: string) => [id, id.endsWith("102") ? verdict(id) : null]));
+      return undefined;
+    };
+    await boot();
+    const ask = sent.find((m) => m.type === "getVerdicts")!;
+    expect(ask.ids).toContain("1850000000000000102"); // matches no filter
+    expect(ask.ids.length).toBeGreaterThan(3);
+    expect(ask.filtered).toEqual([]);
+    expect(sent.some((m) => m.type === "observe")).toBe(false);
+    expect(document.querySelectorAll("seat12a-verdict")).toHaveLength(1); // the unfiltered post 102
   });
 
   it("requests each verdict once, batched, and renders only for posts that have one", async () => {
