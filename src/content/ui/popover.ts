@@ -1,7 +1,8 @@
 import type { BadgeAccount, BadgeAccountDetail, BadgeAffiliation } from "~/shared/api-types";
 import { send } from "~/shared/messages";
+import { badgeColors } from "~/shared/palette";
 import { h } from "./dom";
-import { brandMark, icon } from "./icons";
+import { brandMark, icon, sealIcon } from "./icons";
 import { getOverlay, place } from "./overlay";
 import { ui } from "./state";
 import { badgeReason, badgeTitle, logoImg } from "./tooltip";
@@ -56,11 +57,17 @@ function body(detail: BadgeAccount | BadgeAccountDetail): Node[] {
   const { t } = ui;
   const out: Node[] = [];
   if (detail.badge) {
-    // No large seal here: the badge itself is already right next to the name.
+    // Small seal inline before the title (no large one: the badge is already next to the name).
+    const colors = badgeColors(detail.badge.category, ui.theme, detail.badge.color);
     out.push(h(
       "div",
       { class: "card-head" },
-      h("div", { class: "card-id" }, h("div", { class: "card-title" }, badgeTitle(detail) ?? ""), h("div", { class: "card-sub" }, badgeReason(detail) ?? "")),
+      h(
+        "div",
+        { class: "card-id" },
+        h("div", { class: "card-title" }, sealIcon(16, colors.fill, colors.stroke), h("span", {}, badgeTitle(detail) ?? "")),
+        h("div", { class: "card-sub" }, badgeReason(detail) ?? ""),
+      ),
     ));
   }
   if (detail.affiliations.length) {

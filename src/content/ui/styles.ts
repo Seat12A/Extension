@@ -95,7 +95,8 @@ export const OVERLAY_CSS = `
 .card-head { display: flex; align-items: center; gap: 12px; }
 .card-head > svg { flex: none; }
 .card-id { min-width: 0; }
-.card-title { font-size: 16px; font-weight: 700; letter-spacing: -.01em; line-height: 1.25; }
+.card-title { display: flex; align-items: center; gap: 6px; font-size: 16px; font-weight: 700; letter-spacing: -.01em; line-height: 1.25; }
+.card-title > svg { flex: none; }
 .card-sub { margin-top: 2px; color: var(--text2); font-size: 13px; line-height: 1.35; overflow-wrap: anywhere; }
 .status { margin: 12px 0 0; color: var(--text2); font-size: 12px; }
 .sect { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
@@ -107,6 +108,8 @@ export const OVERLAY_CSS = `
 .aff-t { min-width: 0; overflow-wrap: anywhere; font-size: 14px; font-weight: 500; line-height: 1.3; }
 .aff-t small { display: block; color: var(--text2); font-size: 12px; font-weight: 400; }
 .card-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 14px; padding: 8px 0 10px; border-top: 1px solid var(--line); }
+/* No affiliations: nothing to separate the footer from. */
+.card-head + .card-foot, .card-head + .status + .card-foot { border-top: 0; margin-top: 6px; padding-top: 4px; }
 .by { display: inline-flex; align-items: center; gap: 6px; color: var(--text2); font-size: 12px; }
 .by strong { color: var(--text); font-weight: 600; }
 .acts { display: inline-flex; gap: 2px; margin-inline-end: -6px; }
