@@ -101,12 +101,12 @@ describe("badge widget", () => {
     document.body.append(host);
     hover(host);
     const tip = overlay().querySelector(".tip")!.textContent!;
-    expect(tip).toContain("Ce compte est certifié car c'est un média.");
+    expect(tip).toContain("Ce compte est certifié car il s'agit d'un média.");
     expect(tip).not.toContain("Le Monde");
     chromeMock.messageHandler = () => null;
     host.shadowRoot!.querySelector("button")!.click();
     await tick();
-    expect(overlay().querySelector(".card-sub")!.textContent).toBe("Ce compte est certifié car c'est un média.");
+    expect(overlay().querySelector(".card-sub")!.textContent).toBe("Ce compte est certifié car il s'agit d'un média.");
     expect(overlay().querySelector(".card")!.textContent).not.toContain("Le Monde");
     document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
 

@@ -1,8 +1,7 @@
 import type { BadgeAccount, BadgeAccountDetail, BadgeAffiliation } from "~/shared/api-types";
 import { send } from "~/shared/messages";
-import { badgeColors } from "~/shared/palette";
 import { h } from "./dom";
-import { brandMark, icon, sealIcon } from "./icons";
+import { brandMark, icon } from "./icons";
 import { getOverlay, place } from "./overlay";
 import { ui } from "./state";
 import { badgeReason, badgeTitle, logoImg } from "./tooltip";
@@ -50,18 +49,17 @@ function iconButton(name: "addModerator" | "flag", label: string, onclick: () =>
 }
 
 /**
- * Badge popover. Own badge first (seal + "Category · field" + why it is verified), then
+ * Badge popover. Own badge first ("Category · field" + why it is verified), then
  * the affiliations (organisation logos, never a check). The account's name is not repeated.
  */
 function body(detail: BadgeAccount | BadgeAccountDetail): Node[] {
   const { t } = ui;
   const out: Node[] = [];
   if (detail.badge) {
-    const colors = badgeColors(detail.badge.category, ui.theme, detail.badge.color);
+    // No large seal here: the badge itself is already right next to the name.
     out.push(h(
       "div",
       { class: "card-head" },
-      sealIcon(28, colors.fill, colors.stroke),
       h("div", { class: "card-id" }, h("div", { class: "card-title" }, badgeTitle(detail) ?? ""), h("div", { class: "card-sub" }, badgeReason(detail) ?? "")),
     ));
   }

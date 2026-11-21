@@ -100,11 +100,11 @@
     "description": "Raison du badge, catégorie organisation"
   },
   "content_reason_media": {
-    "message": "Ce compte est certifié car c'est un média.",
+    "message": "Ce compte est certifié car il s'agit d'un média.",
     "description": "Raison du badge, catégorie média"
   },
   "content_reason_expert": {
-    "message": "Ce compte est certifié car c'est un expert reconnu dans son domaine.",
+    "message": "Ce compte est certifié car il s'agit d'un expert reconnu dans son domaine.",
     "description": "Raison du badge, catégorie expert"
   },
   "content_reason_verified": {
